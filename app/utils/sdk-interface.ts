@@ -82,3 +82,60 @@ export function createRemarkTransaction(
     },
   })
 }
+
+export function createUSDCTransfer(
+  recipient: string,
+  amount: string,
+  signer: PolkadotSigner,
+  callbacks: {
+    onTxHash: (hash: string) => void
+    onFinalized: () => void
+    onError: (error: string) => void
+  },
+) {
+  const { api } = sdk('dot_asset_hub')
+  
+  // USDC asset ID on Polkadot Asset Hub (this would be the actual USDC asset ID)
+  const USDC_ASSET_ID = 1337 // Placeholder - use real USDC asset ID
+  const amountInSmallestUnit = BigInt(parseFloat(amount) * 1_000_000) // USDC has 6 decimals
+
+  const tx = api.tx.Assets.transfer({
+    id: USDC_ASSET_ID,
+    target: recipient,
+    amount: amountInSmallestUnit,
+  })
+
+  const unsub = tx.signSubmitAndWatch(signer).subscribe({
+    next: (event) => {
+      if (event.type === 'txBestBlocksState' && event.found) {
+        callbacks.onTxHash(event.txHash)
+      }
+
+      if (event.type === 'finalized') {
+        callbacks.onFinalized()
+        unsub.unsubscribe()
+      }
+    },
+    error: (err) => {
+      unsub.unsubscribe()
+      console.error(err)
+      callbacks.onError(err.message || 'Unknown error')
+    },
+  })
+}
+
+export async function getUSDCBalance(address: string) {
+  const { api } = sdk('dot_asset_hub')
+  const USDC_ASSET_ID = 1337 // Placeholder
+  
+  try {
+    const balance = await api.query.Assets.Account.getValue(USDC_ASSET_ID, address)
+    if (balance) {
+      const usdcBalance = Number(balance.balance) / 1_000_000 // Convert from smallest unit
+      return usdcBalance.toFixed(2)
+    }
+    return '0.00'
+  } catch {
+    return '0.00'
+  }
+}
