@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Descriptors
 app/descriptors
+
+package-lock.json
