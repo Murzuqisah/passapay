@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Dapp Name',
+  title: 'PassaPay - Cross-border payments for artists',
+  description: 'Enable artists to receive instant, low-cost cross-border payments through blockchain technology',
 }
 
 export default function RootLayout({
