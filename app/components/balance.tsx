@@ -2,7 +2,7 @@
 
 import type { Prefix } from '../utils/sdk'
 import { useEffect, useState } from 'react'
-import { getBalance } from '../utils/sdk-interface'
+import { getBalance, getUSDCBalance } from '../utils/sdk-interface'
 
 interface BalanceProps {
   address?: string
@@ -12,6 +12,7 @@ interface BalanceProps {
 export default function Balance({ address, chainKey }: BalanceProps) {
   const [balance, setBalance] = useState('')
   const [symbol, setSymbol] = useState('')
+  const [usdcBalance, setUsdcBalance] = useState('0.00')
 
   useEffect(() => {
     if (!address) {
@@ -25,6 +26,14 @@ export default function Balance({ address, chainKey }: BalanceProps) {
       if (!ignore) {
         setBalance(balance)
         setSymbol(symbol)
+      }
+      
+      // Fetch USDC balance for Asset Hub chains
+      if (chainKey.includes('asset_hub')) {
+        const usdc = await getUSDCBalance(address)
+        if (!ignore) {
+          setUsdcBalance(usdc)
+        }
       }
     }
 
@@ -48,6 +57,12 @@ export default function Balance({ address, chainKey }: BalanceProps) {
           {symbol}
         </div>
       </div>
+      {chainKey.includes('asset_hub') && (
+        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
+          <div className="text-xs text-blue-600 font-medium mb-1">USDC Balance</div>
+          <div className="font-mono text-blue-800">{usdcBalance} USDC</div>
+        </div>
+      )}
     </div>
   )
 }
