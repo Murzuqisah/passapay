@@ -4,10 +4,10 @@ import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { connectedWallet, selectedAccount } from '../hooks/use-connect'
 import sdk from '../utils/sdk'
-import { name } from '../../package.json'
+import packageJson from '../../package.json'
 import { formatValue } from '@polkadot-api/react-components'
 
-export const DAPP_NAME = name
+export const DAPP_NAME = packageJson.name
 
 export async function polkadotSigner() {
   const selectedExtension = await connectInjectedExtension(
@@ -101,7 +101,7 @@ export function createUSDCTransfer(
 
   const tx = api.tx.Assets.transfer({
     id: USDC_ASSET_ID,
-    target: recipient,
+    target: { type: 'Id', value: recipient },
     amount: amountInSmallestUnit,
   })
 

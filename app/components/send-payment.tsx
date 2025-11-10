@@ -6,7 +6,7 @@ import { useUSDCTransaction } from '../hooks/use-usdc-transaction'
 
 export default function SendPayment() {
   const { selectedAccount } = useConnect()
-  const { isProcessing, result, txHash, sendUSDC } = useUSDCTransaction()
+  const { isProcessing, result, sendUSDC } = useUSDCTransaction()
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
   const [showConfirmation, setShowConfirmation] = useState(false)
