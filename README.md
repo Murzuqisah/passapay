@@ -4,11 +4,11 @@
 
 A modern **Next.js 15 + TypeScript + React 19** application built on Polkadot that enables artists performing abroad to receive instant payments and convert them to their home currency without intermediaries, escrow, or holding periods.
 
-## 🎯 Mission
+## Mission
 
 Enable artists to receive instant, low-cost cross-border payments through blockchain technology, eliminating traditional banking delays and high fees.
 
-## 🚀 Features
+## Features
 
 ### Core Payment Features
 - **Instant Payments** - Direct wallet-to-wallet transfers in stablecoins (USDC)
@@ -26,17 +26,17 @@ Enable artists to receive instant, low-cost cross-border payments through blockc
 - **Wallet Connection** support via Talisman Connect
 - Pre-configured for **multiple Polkadot chains**
 
-## 🔗 SDK Information
+## SDK Information
 
 This template uses **PAPI (Polkadot API)** - a modern, type-safe SDK for interacting with Polkadot-based blockchains.
 
-📚 **PAPI Documentation**: https://papi.how/
+**PAPI Documentation**: https://papi.how/
 
 ### Configuration Files:
 - **`app/utils/sdk.ts`** - Configures which chains to connect to and manages chain endpoints. You can modify supported networks and RPC providers here.
 - **`app/utils/sdk-interface.ts`** - Provides high-level functions for onchain SDK calls.
 
-## 💡 How It Works
+## How It Works
 
 ### 1. Payment Process
 - Promoter logs into platform and initiates payment
@@ -54,7 +54,7 @@ This template uses **PAPI (Polkadot API)** - a modern, type-safe SDK for interac
 - Convert earnings to local currency (KES, NGN, etc.)
 - Withdraw via M-Pesa or bank transfer
 
-## 🌐 Supported Chains
+## Supported Chains
 
 Pre-configured for:
 - **Polkadot** (DOT) - Main network
@@ -62,7 +62,7 @@ Pre-configured for:
 - **Paseo** (PAS) - Testnet
 - **Paseo Asset Hub** - Testnet asset management
 
-## 🛠️ Getting Started
+## Getting Started
 
 ```bash
 # Install dependencies
@@ -78,7 +78,7 @@ npm run build
 npm run start
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 app/
@@ -90,7 +90,7 @@ app/
 └── page.tsx        # Main page component
 ```
 
-## 🔧 Adding Custom Networks
+## Adding Custom Networks
 
 ### Step 1: Generate Chain Descriptors
 
@@ -139,9 +139,9 @@ const CONFIG = {
 }
 ```
 
-📖 For more details, see the [PAPI Codegen documentation](https://papi.how/codegen).
+For more details, see the [PAPI Codegen documentation](https://papi.how/codegen).
 
-## 🎵 Example Scenario
+## Example Scenario
 
 **Kenyan Artist in Nigeria:**
 1. Bien performs in Lagos
@@ -149,7 +149,7 @@ const CONFIG = {
 3. Bien's wallet receives it immediately
 4. *(Future)* Converts to KES and withdraws to M-Pesa
 
-## 🛣️ Roadmap
+## Roadmap
 
 ### MVP (Current)
 - Account creation and wallet setup
@@ -165,7 +165,7 @@ const CONFIG = {
 - Bulk payment options
 - Advanced compliance features
 
-## 📚 Learn More
+## Learn More
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [PAPI Documentation](https://papi.how/)
