@@ -14,7 +14,6 @@ export { Navbar } from './navbar';
 export { Footer } from './Footer';
 
 // Core components
-export { default as Header } from './header';
 export { default as AccountCard } from './account-card';
 export { default as SendPayment } from './send-payment';
 export { default as PaymentHistory } from './payment-history';

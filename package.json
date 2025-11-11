@@ -10,7 +10,7 @@
     "postinstall": "papi"
   },
   "dependencies": {
-    "@polkadot-api/descriptors": "^0.0.1",
+    "@polkadot-api/descriptors": "file:app/descriptors",
     "@polkadot-api/react-components": "^0.4.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-label": "^2.1.8",

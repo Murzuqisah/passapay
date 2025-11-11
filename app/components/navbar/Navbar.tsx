@@ -6,6 +6,7 @@ import NavLink from './NavLink';
 import NavButton from './NavButton';
 import MobileMenu from './MobileMenu';
 import { ThemeToggle } from '../ThemeToggle';
+import Connect from '../connect';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -56,13 +57,13 @@ export default function Navbar() {
             {/* Desktop Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
               <ThemeToggle />
-              <NavButton variant="secondary" href="/login">Sign In</NavButton>
-              <NavButton variant="primary" href="/register">Get Started</NavButton>
+              <Connect />
             </div>
             
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center space-x-2">
               <ThemeToggle />
+              <Connect />
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="p-2 hover:bg-muted/50 rounded-lg transition-colors"

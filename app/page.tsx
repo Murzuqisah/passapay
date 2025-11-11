@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useConnect } from './hooks/use-connect'
 import {
-  Header,
   Footer,
   Navbar,
   HeroSection,
@@ -21,7 +20,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <Header />
       <Navbar />
       <HeroSection />
       <FeaturesSection />

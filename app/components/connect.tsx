@@ -54,18 +54,18 @@ export default function Connect() {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="btn btn-outline btn-sm font-mono"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
           onClick={openConnectModal}
         >
           {!selectedAccount
             ? (
-                <div className="flex items-center gap-2">
+                <>
                   <span className="icon-[mdi--wallet] w-4 h-4" />
                   <span>Connect Wallet</span>
-                </div>
+                </>
               )
             : (
-                <div className="flex items-center gap-2">
+                <>
                   <span className="icon-[mdi--wallet] w-4 h-4" />
                   <span className="hidden sm:block">{selectedAccount.name}</span>
                   <Image
@@ -75,7 +75,7 @@ export default function Connect() {
                     height={16}
                     className="w-4 h-4"
                   />
-                </div>
+                </>
               )}
         </button>
 
@@ -84,7 +84,7 @@ export default function Connect() {
           ? (
               <button
                 type="button"
-                className="btn btn-outline btn-sm font-mono"
+                className="inline-flex items-center justify-center p-2 border border-input bg-background rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
                 onClick={disconnect}
               >
                 <span className="icon-[mdi--logout] w-4 h-4" />
@@ -94,57 +94,60 @@ export default function Connect() {
       </div>
 
       {/* Modal using HTML dialog element */}
-      <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box max-w-2xl">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-medium text-black uppercase tracking-wider">
-              CONNECT WALLET
-            </h2>
-            <button type="button" className="btn btn-sm btn-circle btn-ghost" onClick={closeConnectModal}>
-              <span className="icon-[mdi--close]" />
-            </button>
-          </div>
+      <dialog ref={modalRef} className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
+        <div className="bg-background border rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold">
+                Connect Wallet
+              </h2>
+              <button 
+                type="button" 
+                className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-accent transition-colors" 
+                onClick={closeConnectModal}
+              >
+                <span className="icon-[mdi--close] w-5 h-5" />
+              </button>
+            </div>
 
           {/* Account Selection */}
           {listAccounts.length > 0
             ? (
                 <div className="mb-6">
-                  <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-3">
                     Select Account
                   </h3>
                   <div className="space-y-2">
                     {listAccounts.map(account => (
                       <div
                         key={account.address}
-                        className={`card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow ${
+                        className={`p-4 border rounded-lg cursor-pointer hover:shadow-md transition-all ${
                           isAccountSelected(account)
-                            ? 'border-primary'
-                            : 'border-base-300 hover:border-primary'
+                            ? 'border-primary bg-primary/5'
+                            : 'border-border hover:border-primary'
                         }`}
                         onClick={() => handleSelectAccount(account)}
                       >
-                        <div className="card-body">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
-                                <span className="icon-[mdi--account] text-gray-500" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-black">
-                                  {account.name}
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                  {stripAddress(account.address)}
-                                </p>
-                              </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-3">
+                              <span className="icon-[mdi--account] text-muted-foreground" />
                             </div>
-                            {isAccountSelected(account)
-                              ? (
-                                  <div className="w-2 h-2 bg-primary rounded-full" />
-                                )
-                              : null}
+                            <div>
+                              <p className="text-sm font-medium">
+                                {account.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {stripAddress(account.address)}
+                              </p>
+                            </div>
                           </div>
+                          {isAccountSelected(account)
+                            ? (
+                                <div className="w-2 h-2 bg-primary rounded-full" />
+                              )
+                            : null}
                         </div>
                       </div>
                     ))}
@@ -278,10 +281,8 @@ export default function Connect() {
                 </div>
               )
             : null}
+          </div>
         </div>
-        <form method="dialog" className="modal-backdrop">
-          <button type="button">close</button>
-        </form>
       </dialog>
     </>
   )
