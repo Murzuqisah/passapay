@@ -54,8 +54,9 @@ const userSchema = new mongoose.Schema({
 export const User = mongoose.models.User || mongoose.model('User', userSchema)
 
 declare global {
+   
   var mongoose: {
-    conn: typeof mongoose | null
-    promise: Promise<typeof mongoose> | null
+    conn: typeof import('mongoose') | null
+    promise: Promise<typeof import('mongoose')> | null
   }
 }
