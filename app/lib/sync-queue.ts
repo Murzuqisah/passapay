@@ -2,13 +2,13 @@ interface QueuedRequest {
   id: string
   endpoint: string
   method: string
-  data: any
+  data: Record<string, unknown>
   timestamp: number
 }
 
 const QUEUE_KEY = 'passapay_sync_queue'
 
-export function addToQueue(endpoint: string, method: string, data: any) {
+export function addToQueue(endpoint: string, method: string, data: Record<string, unknown>) {
   const queue = getQueue()
   const request: QueuedRequest = {
     id: Date.now().toString(),

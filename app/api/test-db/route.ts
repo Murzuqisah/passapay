@@ -8,10 +8,10 @@ export async function GET() {
       success: true, 
       message: 'MongoDB connected successfully' 
     })
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json({ 
       success: false, 
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       details: 'Check MongoDB Atlas IP whitelist and connection string'
     }, { status: 500 })
   }
