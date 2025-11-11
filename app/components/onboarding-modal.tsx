@@ -60,7 +60,7 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
         addToQueue('/api/users', 'POST', userData)
         onComplete(data)
       }
-    } catch (error) {
+    } catch {
       // Queue for retry on network error
       const { addToQueue } = await import('../lib/sync-queue')
       addToQueue('/api/users', 'POST', {

@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json()
     const transaction = await createTransaction(data)
     return NextResponse.json(transaction)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to create transaction' }, { status: 500 })
   }
 }
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     
     const transactions = await getTransactionsByAddress(address)
     return NextResponse.json(transactions)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch transactions' }, { status: 500 })
   }
 }

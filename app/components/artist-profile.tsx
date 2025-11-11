@@ -32,8 +32,8 @@ export default function ArtistProfile() {
         if (data.exists && data.user) {
           setProfile(data.user)
         }
-      } catch (error) {
-        console.error('Error fetching profile:', error)
+      } catch {
+        // Profile fetch failed
       } finally {
         setIsLoading(false)
       }
@@ -62,7 +62,7 @@ export default function ArtistProfile() {
         addToQueue('/api/users', 'PUT', profile)
         setMessage('Saved locally, will sync when online')
       }
-    } catch (error) {
+    } catch {
       const { addToQueue } = await import('../lib/sync-queue')
       addToQueue('/api/users', 'PUT', profile)
       setMessage('Saved locally, will sync when online')
