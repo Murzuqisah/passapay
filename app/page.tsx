@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import AccountCard from './components/account-card'
 import Footer from './components/footer'
 import Header from './components/header'
 import SendPayment from './components/send-payment'
 import PaymentHistory from './components/payment-history'
 import ArtistProfile from './components/artist-profile'
+import OnboardingModal from './components/onboarding-modal'
 import { useConnect } from './hooks/use-connect'
 import { unifyAddress } from './utils/formatters'
 import { chainKeys } from './utils/sdk'
@@ -14,6 +15,44 @@ import { chainKeys } from './utils/sdk'
 export default function Home() {
   const { selectedAccount } = useConnect()
   const [activeTab, setActiveTab] = useState<'dashboard' | 'send' | 'history' | 'profile'>('dashboard')
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [isCheckingUser, setIsCheckingUser] = useState(false)
+
+  useEffect(() => {
+    const checkUserProfile = async () => {
+      if (!selectedAccount?.address) return
+
+      setIsCheckingUser(true)
+      
+      // Try to sync queued requests
+      const { syncQueue } = await import('./lib/sync-queue')
+      await syncQueue()
+      
+      try {
+        const response = await fetch(`/api/users?walletAddress=${selectedAccount.address}`)
+        const data = await response.json()
+        
+        if (data.useLocalStorage) {
+          const { userExists } = await import('./lib/local-storage')
+          if (!userExists(selectedAccount.address)) {
+            setShowOnboarding(true)
+          }
+        } else if (!data.exists) {
+          setShowOnboarding(true)
+        }
+      } catch (error) {
+        console.error('Error checking user profile:', error)
+      } finally {
+        setIsCheckingUser(false)
+      }
+    }
+
+    checkUserProfile()
+  }, [selectedAccount])
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false)
+  }
 
   return (
     <div className="min-h-screen flex flex-col justify-between">
@@ -63,9 +102,17 @@ export default function Home() {
         </div>
       )}
 
+      {/* Onboarding Modal */}
+      <OnboardingModal isOpen={showOnboarding} onComplete={handleOnboardingComplete} />
+
       {/* Main Content */}
       <main className="container mx-auto py-8 flex-1">
-        {!selectedAccount ? (
+        {isCheckingUser ? (
+          <div className="text-center py-16">
+            <span className="icon-[mdi--loading] animate-spin text-6xl text-gray-400 mb-4 block" />
+            <p className="text-gray-500">Loading profile...</p>
+          </div>
+        ) : !selectedAccount ? (
           <div className="text-center py-16">
             <span className="icon-[mdi--wallet] text-6xl text-gray-400 mb-4 block" />
             <h2 className="text-2xl font-semibold text-gray-700 mb-2">Connect Your Wallet</h2>
