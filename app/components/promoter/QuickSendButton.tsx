@@ -10,18 +10,15 @@ export function QuickSendButton({ onClick }: QuickSendButtonProps) {
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 group-hover:opacity-100 transition-opacity duration-500" />
       
-      {/* Decorative gradient circle */}
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-2xl" />
-      
       <div className="relative z-10">
-        <div className="mb-4 sm:mb-6">
-          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 sm:mb-4 shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow duration-300">
-            <span className="icon-[mdi--send] text-2xl sm:text-3xl text-white" />
+        <div className="mb-3 sm:mb-4">
+          <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-2 sm:mb-3 shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow duration-300">
+            <span className="icon-[mdi--send] text-xl sm:text-2xl text-white" />
           </div>
-          <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1 sm:mb-2">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-1">
             Send Payment
           </h3>
-          <p className="text-xs sm:text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             Quick payment to artists and performers
           </p>
         </div>
