@@ -75,10 +75,11 @@ export function HeroSection() {
                 <span className="hidden sm:inline">Launch Your Artist Profile</span>
                 <span className="sm:hidden">Get Started</span>
               </Link>
-              <button className="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-input bg-background rounded-lg font-medium hover:bg-accent hover:text-accent-foreground transition-colors text-sm sm:text-base">
-                <Music className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
-                See Demo
-              </button>
+              <Link href="/promoter/dashboard" className="inline-flex items-center justify-center px-4 sm:px-6 py-3 border-2 border-primary bg-primary/10 text-primary rounded-lg font-bold hover:bg-primary/20 transition-all duration-300 text-sm sm:text-base hover:scale-105">
+                <span className="icon-[mdi--account-tie] mr-2 text-lg" />
+                <span className="hidden sm:inline">Promoter Dashboard</span>
+                <span className="sm:hidden">Dashboard</span>
+              </Link>
             </div>
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-sm">
