@@ -81,13 +81,8 @@ export function RecentPayments({ payments, onViewAll }: RecentPaymentsProps) {
             className="bg-card/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:scale-[1.01] cursor-pointer"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Left: Icon */}
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-                <span className="icon-[mdi--account-music] text-xl sm:text-2xl text-primary" />
-              </div>
-              
-              {/* Middle: Recipient Info */}
+            <div className="flex items-start justify-between gap-3">
+              {/* Left: Recipient Info */}
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-foreground text-sm sm:text-base truncate">
                   {payment.recipient}
@@ -95,19 +90,19 @@ export function RecentPayments({ payments, onViewAll }: RecentPaymentsProps) {
                 <p className="text-xs text-muted-foreground font-mono truncate">
                   {payment.walletAddress.slice(0, 6)}...{payment.walletAddress.slice(-4)}
                 </p>
-              </div>
-
-              {/* Right: Amount and Status */}
-              <div className="text-right flex-shrink-0">
-                <p className="font-bold text-foreground text-base sm:text-lg whitespace-nowrap">
-                  ${payment.amount}
-                </p>
-                <div className="flex items-center justify-end gap-1 mt-0.5">
+                <div className="flex items-center gap-1 mt-0.5">
                   <span className={`${getStatusIcon(payment.status)} text-xs ${getStatusColor(payment.status)}`} />
                   <span className="text-[10px] sm:text-xs text-muted-foreground whitespace-nowrap">
                     {formatDate(payment.timestamp)}
                   </span>
                 </div>
+              </div>
+
+              {/* Right: Amount */}
+              <div className="text-right flex-shrink-0">
+                <p className="font-bold text-foreground text-base sm:text-lg whitespace-nowrap">
+                  ${payment.amount}
+                </p>
               </div>
             </div>
           </div>
