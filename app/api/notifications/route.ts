@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json()
     const notification = await createNotification(data)
     return NextResponse.json(notification)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to create notification' }, { status: 500 })
   }
 }
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     
     const notifications = await getNotificationsByUser(userId)
     return NextResponse.json(notifications)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch notifications' }, { status: 500 })
   }
 }
@@ -30,7 +30,7 @@ export async function PATCH(request: NextRequest) {
     const { notificationId } = await request.json()
     await markAsRead(notificationId)
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to mark as read' }, { status: 500 })
   }
 }

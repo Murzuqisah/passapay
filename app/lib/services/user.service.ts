@@ -1,6 +1,6 @@
 import { connectDB } from '../db'
 import mongoose from 'mongoose'
-import { User, ArtistProfile } from '../types'
+import { ArtistProfile } from '../types'
 
 const userSchema = new mongoose.Schema({
   email: String,

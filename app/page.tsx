@@ -9,15 +9,12 @@ import {
   HeroSection,
   FeaturesSection,
   HowItWorksSection,
-  CTASection,
-
-  DashboardTabs,
-  DashboardContent
+  CTASection
 } from './components'
 
 export default function Home() {
   const { selectedAccount } = useConnect()
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'send' | 'history' | 'profile'>('dashboard')
+
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [isCheckingUser, setIsCheckingUser] = useState(false)
 
@@ -65,36 +62,7 @@ export default function Home() {
       <HowItWorksSection />
       <CTASection />
 
-      {selectedAccount && (
-        <div className="container mx-auto px-4">
-          <div className="tabs tabs-boxed bg-gray-100 w-fit mx-auto">
-            <button 
-              className={`tab ${activeTab === 'dashboard' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('dashboard')}
-            >
-              Dashboard
-            </button>
-            <button 
-              className={`tab ${activeTab === 'send' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('send')}
-            >
-              Send Payment
-            </button>
-            <button 
-              className={`tab ${activeTab === 'history' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('history')}
-            >
-              History
-            </button>
-            <button 
-              className={`tab ${activeTab === 'profile' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('profile')}
-            >
-              Profile
-            </button>
-          </div>
-        </div>
-      )}
+
 
       {/* Onboarding Modal */}
       <OnboardingModal isOpen={showOnboarding} onComplete={handleOnboardingComplete} />
@@ -113,24 +81,10 @@ export default function Home() {
             <p className="text-gray-500">Connect your wallet to start sending and receiving payments</p>
           </div>
         ) : (
-          <div className="space-y-8">
-            {activeTab === 'dashboard' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                {chainKeys.map(chainKey => (
-                  <AccountCard
-                    key={chainKey}
-                    chainKey={chainKey}
-                    address={unifyAddress(selectedAccount.address)}
-                  />
-                ))}
-              </div>
-            )}
-            
-            {activeTab === 'send' && <SendPayment />}
-            
-            {activeTab === 'history' && <PaymentHistory />}
-            
-            {activeTab === 'profile' && <ArtistProfile />}
+          <div className="text-center py-16">
+            <span className="icon-[mdi--check-circle] text-6xl text-green-400 mb-4 block" />
+            <h2 className="text-2xl font-semibold text-gray-700 mb-2">Wallet Connected</h2>
+            <p className="text-gray-500">Welcome to PassaPay! Your dashboard features are coming soon.</p>
           </div>
         )}
       </main>
