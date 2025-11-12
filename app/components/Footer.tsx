@@ -59,13 +59,13 @@ export function Footer() {
               <a href="https://github.com/Passa-Inc/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Icon icon="mdi:github" className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://x.com/passa_events/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Icon icon="mdi:twitter" className="w-5 h-5" />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
                 <Icon icon="mdi:instagram" className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://www.linkedin.com/company/passa-afrika/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Icon icon="mdi:linkedin" className="w-5 h-5" />
               </a>
             </div>
