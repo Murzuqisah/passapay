@@ -165,8 +165,13 @@ For more details, see the [PAPI Codegen documentation](https://papi.how/codegen)
 - Bulk payment options
 - Advanced compliance features
 
-## Learn More
+## Documentation
 
+### Development Guides
+- **[Styling Guide](./STYLING_GUIDE.md)** - Complete design system and styling conventions
+- **[Functionality Guide](./FUNCTIONALITY_GUIDE.md)** - Feature implementation and security practices
+
+### External Resources
 - [Next.js Documentation](https://nextjs.org/docs)
 - [PAPI Documentation](https://papi.how/)
 - [Polkadot Developer Portal](https://wiki.polkadot.network/)

@@ -72,13 +72,12 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           </nav>
           
           <div className="flex flex-col space-y-3 mt-auto">
-            <Connect />
-            <button className="px-4 py-2 text-foreground hover:bg-muted/50 rounded-lg transition-colors">
-              Sign In
+            <button className="w-full px-4 py-3 text-foreground hover:bg-muted/50 rounded-lg transition-colors text-left">
+              Log In
             </button>
-            <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-              Get Started
-            </button>
+            <div className="w-full">
+              <Connect />
+            </div>
           </div>
         </div>
       </div>

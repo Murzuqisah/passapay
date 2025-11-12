@@ -9,7 +9,7 @@ import {
   FeaturesSection,
   HowItWorksSection,
   CTASection,
-  WalletPrompt,
+
   DashboardTabs,
   DashboardContent
 } from './components'

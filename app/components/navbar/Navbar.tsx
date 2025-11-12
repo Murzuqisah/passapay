@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import NavLink from './NavLink';
-import NavButton from './NavButton';
+
 import MobileMenu from './MobileMenu';
 import { ThemeToggle } from '../ThemeToggle';
 import Connect from '../connect';
