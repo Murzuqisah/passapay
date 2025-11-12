@@ -93,54 +93,56 @@ export default function PromoterDashboard() {
       <Navbar />
 
       {/* Hero Section with Glass Effect */}
-      <section className="relative pt-24 pb-12 overflow-hidden">
+      <section className="relative pt-20 sm:pt-24 pb-8 sm:pb-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
 
         {/* Decorative gradient orbs */}
-        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl opacity-30 animate-float" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-30 animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl opacity-30 animate-float hidden sm:block" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-30 animate-float hidden sm:block" style={{ animationDelay: '1s' }} />
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-3 sm:px-4 relative z-10">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold mb-3 gradient-text">
+            <div className="mb-6 sm:mb-8">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 gradient-text">
                 Promoter Dashboard
               </h1>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-base sm:text-lg">
                 Manage payments and track your transactions
               </p>
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex gap-2 mb-8 flex-wrap">
+            <div className="flex gap-2 mb-6 sm:mb-8 w-full">
               <button
                 onClick={() => setActiveView('overview')}
-                className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${activeView === 'overview'
+                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base ${activeView === 'overview'
                   ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                   : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
                   }`}
               >
-                <span className="icon-[mdi--view-dashboard] inline-block mr-2 text-xl" />
-                Overview
+                <span className="icon-[mdi--view-dashboard] inline-block mr-1 sm:mr-2 text-lg sm:text-xl" />
+                <span className="hidden xs:inline">Overview</span>
+                <span className="xs:hidden">Home</span>
               </button>
               <button
                 onClick={() => setActiveView('history')}
-                className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${activeView === 'history'
+                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base ${activeView === 'history'
                   ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                   : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
                   }`}
               >
-                <span className="icon-[mdi--history] inline-block mr-2 text-xl" />
-                Payment History
+                <span className="icon-[mdi--history] inline-block mr-1 sm:mr-2 text-lg sm:text-xl" />
+                <span className="hidden xs:inline">Payment History</span>
+                <span className="xs:hidden">History</span>
               </button>
             </div>
 
             {/* Overview View */}
             {activeView === 'overview' && (
-              <div className="space-y-8 animate-in">
+              <div className="space-y-4 sm:space-y-6 md:space-y-8 animate-in">
                 {/* Balance and Quick Actions */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                   <div className="lg:col-span-2">
                     <BalanceOverview balance={dummyBalance} />
                   </div>
