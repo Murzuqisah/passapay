@@ -27,12 +27,12 @@ export default function Navbar() {
         <div className={`transition-all duration-500 ease-out ${
           isScrolled 
             ? 'w-full mt-0 rounded-none backdrop-blur-md bg-background/80 border-b border-border/50 shadow-lg' 
-            : 'mt-6 rounded-full section-glass'
+            : 'mt-3 sm:mt-6 rounded-full section-glass mx-0.5 sm:mx-0'
         }`}>
           <div className={`flex items-center transition-all duration-300 ${
             isScrolled 
-              ? 'h-16 px-6 justify-between max-w-7xl mx-auto' 
-              : 'h-14 px-6 justify-center gap-8 w-fit'
+              ? 'h-16 sm:h-16 px-4 sm:px-6 justify-between max-w-7xl mx-auto' 
+              : 'h-16 sm:h-14 px-6 sm:px-6 justify-between sm:justify-center gap-4 sm:gap-8 sm:w-fit'
           }`}>
             <Logo />
             
@@ -61,14 +61,13 @@ export default function Navbar() {
             </div>
             
             {/* Mobile Menu Button */}
-            <div className="lg:hidden flex items-center space-x-2">
+            <div className="lg:hidden flex items-center space-x-1 sm:space-x-2">
               <ThemeToggle />
-              <Connect />
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 hover:bg-muted/50 rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 hover:bg-muted/50 rounded-lg transition-colors"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>

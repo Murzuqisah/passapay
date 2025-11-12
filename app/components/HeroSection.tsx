@@ -40,7 +40,7 @@ export function HeroSection() {
   const { formattedAmount } = useCurrencyRotation();
   
   return (
-    <section className="relative min-h-screen flex items-center">
+    <section className="relative min-h-screen flex items-center pt-20 sm:pt-20">
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
@@ -62,52 +62,53 @@ export function HeroSection() {
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6">
               <span className="section-header">Create. Share. Earn Globally.</span>
             </h1>
 
-            <p className="text-xl text-muted-foreground mb-8 max-w-xl">
+            <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-xl">
               Turn your passion into profit. Connect with fans worldwide, receive instant support, and focus on what you do best - creating amazing art.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Link href="/auth" className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors">
-                Launch Your Artist Profile
+              <Link href="/auth" className="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-sm sm:text-base">
+                <span className="hidden sm:inline">Launch Your Artist Profile</span>
+                <span className="sm:hidden">Get Started</span>
               </Link>
-              <button className="inline-flex items-center justify-center px-6 py-3 border border-input bg-background rounded-lg font-medium hover:bg-accent hover:text-accent-foreground transition-colors">
-                <Music className="mr-2 w-5 h-5" />
+              <button className="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-input bg-background rounded-lg font-medium hover:bg-accent hover:text-accent-foreground transition-colors text-sm sm:text-base">
+                <Music className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                 See Demo
               </button>
             </div>
 
-            <div className="flex items-center gap-6 text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-sm">
               <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-primary" />
+                <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 <span className="text-muted-foreground">Free for all artists</span>
               </div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-primary" />
+                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 <span className="text-muted-foreground">Bank-level security</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-primary fill-primary" />
+                <Star className="w-4 h-4 sm:w-5 sm:h-5 text-primary fill-primary" />
                 <span className="text-muted-foreground">4.9★ rating</span>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 animate-in slide-in-from-right duration-800 delay-200">
+          <div className="relative z-10 animate-in slide-in-from-right duration-800 delay-200 mt-8 lg:mt-0">
             <div className="section-glass rounded-lg border">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">Total Earnings</p>
-                    <h3 className="text-4xl font-bold transition-all duration-500">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">Total Earnings</p>
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold transition-all duration-500">
                       {formattedAmount}
                     </h3>
                   </div>
-                  <div className="inline-flex items-center px-2 py-1 rounded-full bg-secondary text-secondary-foreground text-sm">
-                    <TrendingUp className="w-4 h-4 mr-1" />
+                  <div className="inline-flex items-center px-2 py-1 rounded-full bg-secondary text-secondary-foreground text-xs sm:text-sm">
+                    <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                     +31%
                   </div>
                 </div>

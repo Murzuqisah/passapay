@@ -70,13 +70,13 @@ export default function Support() {
               <HelpCircle className="w-4 h-4 mr-2" />
               Artist Support Hub
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               <span className="section-header">Creative Support</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 sm:mb-12 px-4 sm:px-0">
               We&apos;re here to support your artistic journey. Find answers to common questions, get help from our team, and access comprehensive resources designed specifically for creators.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto px-4 sm:px-0">
               <Card className="border-0 bg-primary/5 hover:bg-primary/10 transition-colors">
                 <CardHeader>
                   <Mail className="w-8 h-8 text-primary mb-2" />
@@ -111,29 +111,29 @@ export default function Support() {
 
       <div className="container mx-auto px-4 py-16">
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
-            <div className="glass-card p-6 rounded-2xl">
+            <div className="glass-card p-4 sm:p-6 rounded-2xl">
               <nav className="space-y-2">
                 {categories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-300 ${selectedCategory === category.id
+                    className={`w-full flex items-center justify-between p-2 sm:p-3 rounded-xl transition-all duration-300 ${selectedCategory === category.id
                       ? "bg-primary text-primary-foreground shadow-lg"
                       : "hover:bg-muted"
                       }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <category.icon className="w-5 h-5" />
-                      <span className="font-medium text-sm">{category.label}</span>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <category.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="font-medium text-xs sm:text-sm">{category.label}</span>
                     </div>
-                    <ChevronRight className={`w-4 h-4 transition-transform ${selectedCategory === category.id ? "rotate-90" : ""
+                    <ChevronRight className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${selectedCategory === category.id ? "rotate-90" : ""
                       }`} />
                   </button>
                 ))}
@@ -147,8 +147,8 @@ export default function Support() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-3"
           >
-            <div className="glass-card p-8 rounded-2xl">
-              <h2 className="text-3xl font-bold mb-8">
+            <div className="glass-card p-4 sm:p-6 lg:p-8 rounded-2xl">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6 sm:mb-8">
                 {categories.find(cat => cat.id === selectedCategory)?.label} FAQ
               </h2>
 
@@ -161,10 +161,10 @@ export default function Support() {
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
                     <AccordionItem value={`item-${index}`} className="border-0 bg-muted/10 rounded-xl overflow-hidden hover:bg-muted/20 transition-colors">
-                      <AccordionTrigger className="text-left hover:no-underline p-6 group">
-                        <span className="font-medium group-hover:text-primary transition-colors">{faq.question}</span>
+                      <AccordionTrigger className="text-left hover:no-underline p-4 sm:p-6 group">
+                        <span className="font-medium group-hover:text-primary transition-colors text-sm sm:text-base">{faq.question}</span>
                       </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground px-6 pb-6 leading-relaxed">
+                      <AccordionContent className="text-muted-foreground px-4 sm:px-6 pb-4 sm:pb-6 leading-relaxed text-sm sm:text-base">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>
