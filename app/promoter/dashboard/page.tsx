@@ -94,7 +94,11 @@ export default function PromoterDashboard() {
 
       {/* Hero Section with Glass Effect */}
       <section className="relative pt-24 pb-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
+
+        {/* Decorative gradient orbs */}
+        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl opacity-30 animate-float" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-30 animate-float" style={{ animationDelay: '1s' }} />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-7xl mx-auto">
@@ -112,9 +116,9 @@ export default function PromoterDashboard() {
             <div className="flex gap-2 mb-8 flex-wrap">
               <button
                 onClick={() => setActiveView('overview')}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${activeView === 'overview'
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
-                    : 'bg-card text-card-foreground hover:bg-muted'
+                className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${activeView === 'overview'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
+                  : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
                   }`}
               >
                 <span className="icon-[mdi--view-dashboard] inline-block mr-2 text-xl" />
@@ -122,9 +126,9 @@ export default function PromoterDashboard() {
               </button>
               <button
                 onClick={() => setActiveView('history')}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${activeView === 'history'
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
-                    : 'bg-card text-card-foreground hover:bg-muted'
+                className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${activeView === 'history'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
+                  : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
                   }`}
               >
                 <span className="icon-[mdi--history] inline-block mr-2 text-xl" />
