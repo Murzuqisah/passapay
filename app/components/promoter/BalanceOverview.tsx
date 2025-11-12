@@ -49,41 +49,27 @@ export function BalanceOverview({ balance }: BalanceOverviewProps) {
         {/* Token Balances */}
         <div className="grid grid-cols-2 gap-2 sm:gap-4">
           {/* USDC Balance */}
-          <div className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 border border-border/50 text-center">
-            <div className="mb-1 sm:mb-2">
-              <div className="flex justify-center mb-1">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="icon-[token-branded--usdc] text-base sm:text-xl text-primary" />
-                </div>
-              </div>
-              <p className="text-[10px] sm:text-xs text-muted-foreground font-medium mb-0.5">USDC</p>
-              <p className="text-sm sm:text-lg font-bold text-foreground">
-                {showBalance ? balance.usdc : '••••••'}
-              </p>
+          <div className="glass-card rounded-lg sm:rounded-xl py-2 px-2 sm:py-3 sm:px-3 border border-border/50 text-center">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-1">
+              <span className="icon-[token-branded--usdc] text-base sm:text-xl text-primary" />
             </div>
-            <div className="flex items-center justify-center gap-0.5 sm:gap-1 text-[10px] sm:text-xs text-muted-foreground">
-              <span className="icon-[mdi--trending-up] text-xs sm:text-sm text-primary" />
-              <span>Available</span>
-            </div>
+            <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">USDC</p>
+            <p className="text-sm sm:text-lg font-bold text-foreground">
+              {showBalance ? balance.usdc : '••••••'}
+            </p>
+            <p className="text-[10px] sm:text-xs text-foreground/60">Available</p>
           </div>
 
           {/* DOT Balance */}
-          <div className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 border border-border/50 text-center">
-            <div className="mb-1 sm:mb-2">
-              <div className="flex justify-center mb-1">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-accent/10 flex items-center justify-center">
-                  <span className="icon-[token-branded--dot] text-base sm:text-xl text-accent" />
-                </div>
-              </div>
-              <p className="text-[10px] sm:text-xs text-muted-foreground font-medium mb-0.5">DOT</p>
-              <p className="text-sm sm:text-lg font-bold text-foreground">
-                {showBalance ? balance.dot : '••••••'}
-              </p>
+          <div className="glass-card rounded-lg sm:rounded-xl py-2 px-2 sm:py-3 sm:px-3 border border-border/50 text-center">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-1">
+              <span className="icon-[token-branded--dot] text-base sm:text-xl text-accent" />
             </div>
-            <div className="flex items-center justify-center gap-0.5 sm:gap-1 text-[10px] sm:text-xs text-muted-foreground">
-              <span className="icon-[mdi--gas-station] text-xs sm:text-sm text-accent" />
-              <span>For fees</span>
-            </div>
+            <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">DOT</p>
+            <p className="text-sm sm:text-lg font-bold text-foreground">
+              {showBalance ? balance.dot : '••••••'}
+            </p>
+            <p className="text-[10px] sm:text-xs text-foreground/60">For fees</p>
           </div>
         </div>
 
