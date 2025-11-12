@@ -116,25 +116,23 @@ export default function PromoterDashboard() {
             <div className="flex gap-2 mb-6 sm:mb-8 w-full">
               <button
                 onClick={() => setActiveView('overview')}
-                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base ${activeView === 'overview'
+                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base whitespace-nowrap ${activeView === 'overview'
                   ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                   : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
                   }`}
               >
                 <span className="icon-[mdi--view-dashboard] inline-block mr-1 sm:mr-2 text-lg sm:text-xl" />
-                <span className="hidden xs:inline">Overview</span>
-                <span className="xs:hidden">Home</span>
+                Overview
               </button>
               <button
                 onClick={() => setActiveView('history')}
-                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base ${activeView === 'history'
+                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base whitespace-nowrap ${activeView === 'history'
                   ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                   : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
                   }`}
               >
                 <span className="icon-[mdi--history] inline-block mr-1 sm:mr-2 text-lg sm:text-xl" />
-                <span className="hidden xs:inline">Payment History</span>
-                <span className="xs:hidden">History</span>
+                History
               </button>
             </div>
 
