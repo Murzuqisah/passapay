@@ -26,10 +26,10 @@ export function BalanceOverview({ balance }: BalanceOverviewProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowBalance(!showBalance)}
-              className="p-2 hover:bg-muted rounded-lg transition-colors duration-200"
+              className="px-3 py-1.5 hover:bg-primary/10 rounded-lg transition-all duration-200 border-2 border-border hover:border-primary/50 text-xs sm:text-sm font-bold text-foreground hover:text-primary"
               title={showBalance ? 'Hide balance' : 'Show balance'}
             >
-              <span className={`${showBalance ? 'icon-[mdi--eye-off]' : 'icon-[mdi--eye]'} text-xl sm:text-2xl text-muted-foreground hover:text-foreground`} />
+              {showBalance ? 'Hide' : 'Show'}
             </button>
             <span className="icon-[mdi--wallet] text-2xl sm:text-3xl text-primary" />
           </div>
