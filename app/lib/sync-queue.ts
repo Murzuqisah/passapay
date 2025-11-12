@@ -53,7 +53,7 @@ export async function syncQueue() {
       } else {
         failed++
       }
-    } catch (error) {
+    } catch {
       failed++
     }
   }
