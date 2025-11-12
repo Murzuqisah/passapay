@@ -66,10 +66,9 @@ export function RecentPayments({ payments, onViewAll }: RecentPaymentsProps) {
         </div>
         <button 
           onClick={onViewAll}
-          className="text-primary hover:text-primary/80 font-bold text-xs sm:text-sm flex items-center gap-0.5 sm:gap-1 transition-colors duration-200 flex-shrink-0"
+          className="text-primary hover:text-primary/80 font-bold text-xs sm:text-sm flex items-center gap-1 transition-colors duration-200 flex-shrink-0 whitespace-nowrap"
         >
-          <span className="hidden xs:inline">View All</span>
-          <span className="xs:hidden">All</span>
+          <span>View All</span>
           <span className="icon-[mdi--arrow-right] text-base sm:text-lg" />
         </button>
       </div>
