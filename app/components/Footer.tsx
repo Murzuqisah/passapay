@@ -6,7 +6,8 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
-import { Mail, Github, Twitter, Instagram, Linkedin, CheckCircle, AlertCircle } from "lucide-react";
+import { Mail, CheckCircle, AlertCircle } from "lucide-react";
+import { Icon } from '@iconify/react';
 import { validateEmail, subscribeToNewsletter } from "../utils/newsletter";
 
 export function Footer() {
@@ -55,17 +56,17 @@ export function Footer() {
             </div>
             <p className="text-sm text-muted-foreground mb-4">Empowering creators to monetize their art and connect with fans worldwide.</p>
             <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Github className="w-5 h-5" />
+              <a href="https://github.com/Passa-Inc/" className="text-muted-foreground hover:text-primary transition-colors">
+                <Icon icon="mdi:github" className="w-5 h-5" />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Twitter className="w-5 h-5" />
+                <Icon icon="mdi:twitter" className="w-5 h-5" />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Instagram className="w-5 h-5" />
+                <Icon icon="mdi:instagram" className="w-5 h-5" />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Linkedin className="w-5 h-5" />
+                <Icon icon="mdi:linkedin" className="w-5 h-5" />
               </a>
             </div>
           </div>
