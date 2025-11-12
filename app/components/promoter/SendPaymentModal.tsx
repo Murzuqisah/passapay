@@ -46,17 +46,17 @@ export function SendPaymentModal({ isOpen, onClose }: SendPaymentModalProps) {
       />
 
       {/* Modal Content */}
-      <div className="relative bg-background rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-border shadow-2xl">
+      <div className="relative bg-background rounded-xl sm:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-border shadow-2xl">
         {/* Form Step */}
         {step === 'form' && (
-          <div className="p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Send Payment</h2>
+          <div className="p-4 sm:p-6 md:p-8">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Send Payment</h2>
               <button 
                 onClick={handleClose}
-                className="p-2 hover:bg-muted rounded-lg transition-colors duration-200"
+                className="p-1.5 sm:p-2 hover:bg-muted rounded-lg transition-colors duration-200"
               >
-                <span className="icon-[mdi--close] text-2xl text-muted-foreground" />
+                <span className="icon-[mdi--close] text-xl sm:text-2xl text-muted-foreground" />
               </button>
             </div>
 
