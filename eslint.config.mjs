@@ -1,16 +1,19 @@
-import { FlatCompat } from '@eslint/eslintrc'
+import { FlatCompat } from "@eslint/eslintrc";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-})
+  baseDirectory: __dirname,
+});
 
 const config = [
   {
     ignores: ['app/descriptors/**'],
   },
-  ...compat.config({
-    extends: ['next/core-web-vitals', 'next/typescript'],
-  }),
-]
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+];
 
-export default config
+export default config;

@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const { userId, name, genre, country } = await request.json()
     const profile = await createArtistProfile(userId, { name, genre, country })
     return NextResponse.json(profile)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to create profile' }, { status: 500 })
   }
 }
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     }
     
     return NextResponse.json(profile)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 })
   }
 }
@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest) {
     const { userId, ...data } = await request.json()
     await updateArtistProfile(userId, data)
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
   }
 }

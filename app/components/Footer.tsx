@@ -1,0 +1,124 @@
+'use client';
+
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Separator } from "./ui/separator";
+import { Mail, CheckCircle, AlertCircle } from "lucide-react";
+import { Icon } from '@iconify/react';
+import { validateEmail, subscribeToNewsletter } from "../utils/newsletter";
+
+export function Footer() {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMessage(null);
+    
+    // Validate email
+    const validation = validateEmail(email);
+    if (!validation.success) {
+      setMessage({ type: 'error', text: validation.error! });
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const result = await subscribeToNewsletter(validation.data!);
+      setMessage({ 
+        type: result.success ? 'success' : 'error', 
+        text: result.message 
+      });
+      if (result.success) {
+        setEmail("");
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <footer className="border-t relative">
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full"></div>
+
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <div className="flex items-center space-x-2 mb-4">
+              <Image src="/logo.png" alt="PassaPay" width={32} height={32} className="w-8 h-8" />
+              <span className="text-xl font-semibold">PassaPay</span>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">Empowering creators to monetize their art and connect with fans worldwide.</p>
+            <div className="flex space-x-4">
+              <a href="https://github.com/Passa-Inc/" className="text-muted-foreground hover:text-primary transition-colors">
+                <Icon icon="mdi:github" className="w-5 h-5" />
+              </a>
+              <a href="https://x.com/passa_events/" className="text-muted-foreground hover:text-primary transition-colors">
+                <Icon icon="mdi:twitter" className="w-5 h-5" />
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Icon icon="mdi:instagram" className="w-5 h-5" />
+              </a>
+              <a href="https://www.linkedin.com/company/passa-afrika/" className="text-muted-foreground hover:text-primary transition-colors">
+                <Icon icon="mdi:linkedin" className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link></li>
+              <li><Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors">Cookie Policy</Link></li>
+            </ul>
+          </div>
+          <div className="md:col-span-2">
+            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              Artist Newsletter
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">Get exclusive tips, success stories, and updates to grow your creative business.</p>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1"
+                  disabled={isLoading}
+                  required
+                />
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Subscribing...' : 'Subscribe'}
+                </Button>
+              </div>
+              {message && (
+                <div className={`flex items-center gap-2 text-sm ${
+                  message.type === 'success' ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {message.type === 'success' ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4" />
+                  )}
+                  {message.text}
+                </div>
+              )}
+            </form>
+          </div>
+        </div>
+        <Separator className="my-8" />
+        <div className="text-center text-sm text-muted-foreground">
+          <p>&copy; 2025 PassaPay. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}

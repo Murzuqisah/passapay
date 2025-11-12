@@ -1,0 +1,88 @@
+# Dependabot configuration for PassaPay
+# Manages dependencies for Next.js 15 + TypeScript + React 19 + Polkadot blockchain integration
+
+version: 2
+updates:
+  # --- NPM Dependencies (Next.js + React + TypeScript + Blockchain) ---
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "npm"
+    reviewers:
+      - "hezronokwach"
+    groups:
+      # Core Next.js and React ecosystem
+      nextjs-react:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@next/*"
+      # TypeScript and linting
+      typescript-tooling:
+        patterns:
+          - "typescript"
+          - "@types/*"
+          - "eslint*"
+          - "@typescript-eslint/*"
+      # UI and styling
+      ui-styling:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "daisyui"
+          - "@radix-ui/*"
+          - "lucide-react"
+          - "@iconify/*"
+          - "framer-motion"
+          - "clsx"
+          - "tailwind-merge"
+      # Blockchain and Polkadot
+      blockchain:
+        patterns:
+          - "@polkadot-api/*"
+          - "polkadot-api"
+          - "@talismn/*"
+          - "@xstate/*"
+      # Database and validation
+      backend-utils:
+        patterns:
+          - "mongodb"
+          - "mongoose"
+          - "zod"
+          - "next-themes"
+          - "crypto-browserify"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+
+  # --- GitHub Actions ---
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+    commit-message:
+      prefix: "chore(ci):"
+    labels:
+      - "ci"
+      - "github-actions"
+    reviewers:
+      - "hezronokwach"

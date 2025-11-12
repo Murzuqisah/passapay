@@ -28,6 +28,6 @@
     }
   },
   "options": {
-    "noDescriptorsPackage": true
+    "noDescriptorsPackage": false
   }
 }

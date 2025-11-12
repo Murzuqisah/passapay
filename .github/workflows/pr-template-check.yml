@@ -1,0 +1,41 @@
+name: PR Template Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-pr-template:
+    name: Check PR Template
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check PR Description
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          const body = pr.body || '';
+          
+          const requiredSections = [
+            'Description',
+            'Changes',
+            'Testing',
+            'Checklist'
+          ];
+          
+          const missingSection = requiredSections.find(section => 
+            !body.includes(`## ${section}`)
+          );
+          
+          if (missingSection) {
+            core.setFailed(`PR description is missing required section: ${missingSection}`);
+            return;
+          }
+          
+          if (body.length < 50) {
+            core.setFailed('PR description is too short. Please provide more details.');
+            return;
+          }
+          
+          console.log('PR template validation passed!');
