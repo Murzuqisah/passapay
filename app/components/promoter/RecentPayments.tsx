@@ -51,59 +51,60 @@ export function RecentPayments({ payments, onViewAll }: RecentPaymentsProps) {
   }
 
   return (
-    <div className="section-glass rounded-2xl p-6 md:p-8 border-2 border-border/50 relative overflow-hidden">
+    <div className="section-glass rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border-2 border-border/50 relative overflow-hidden">
       {/* Decorative gradient */}
-      <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-50" />
+      <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-50 hidden sm:block" />
       
-      <div className="flex items-center justify-between mb-6 relative z-10">
+      <div className="flex items-center justify-between mb-4 sm:mb-6 relative z-10">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-foreground">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">
             Recent Payments
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
             Your latest transactions
           </p>
         </div>
         <button 
           onClick={onViewAll}
-          className="text-primary hover:text-primary/80 font-bold text-sm flex items-center gap-1 transition-colors duration-200"
+          className="text-primary hover:text-primary/80 font-bold text-xs sm:text-sm flex items-center gap-0.5 sm:gap-1 transition-colors duration-200 flex-shrink-0"
         >
-          <span>View All</span>
-          <span className="icon-[mdi--arrow-right] text-lg" />
+          <span className="hidden xs:inline">View All</span>
+          <span className="xs:hidden">All</span>
+          <span className="icon-[mdi--arrow-right] text-base sm:text-lg" />
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3 relative z-10">
         {payments.map((payment, index) => (
           <div 
             key={payment.id}
-            className="glass-card rounded-xl p-4 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:scale-[1.01] cursor-pointer"
+            className="bg-card/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:scale-[1.01] cursor-pointer"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <div className="flex items-center justify-between gap-4">
-              {/* Left: Recipient Info */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-                  <span className="icon-[mdi--account-music] text-2xl text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground truncate">
-                    {payment.recipient}
-                  </p>
-                  <p className="text-xs text-muted-foreground font-mono truncate">
-                    {payment.walletAddress.slice(0, 8)}...{payment.walletAddress.slice(-6)}
-                  </p>
-                </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Left: Icon */}
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                <span className="icon-[mdi--account-music] text-xl sm:text-2xl text-primary" />
+              </div>
+              
+              {/* Middle: Recipient Info */}
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-foreground text-sm sm:text-base truncate">
+                  {payment.recipient}
+                </p>
+                <p className="text-xs text-muted-foreground font-mono truncate">
+                  {payment.walletAddress.slice(0, 6)}...{payment.walletAddress.slice(-4)}
+                </p>
               </div>
 
               {/* Right: Amount and Status */}
               <div className="text-right flex-shrink-0">
-                <p className="font-bold text-foreground text-lg">
+                <p className="font-bold text-foreground text-base sm:text-lg whitespace-nowrap">
                   ${payment.amount}
                 </p>
-                <div className="flex items-center justify-end gap-1 mt-1">
-                  <span className={`${getStatusIcon(payment.status)} text-sm ${getStatusColor(payment.status)}`} />
-                  <span className="text-xs text-muted-foreground">
+                <div className="flex items-center justify-end gap-1 mt-0.5">
+                  <span className={`${getStatusIcon(payment.status)} text-xs ${getStatusColor(payment.status)}`} />
+                  <span className="text-[10px] sm:text-xs text-muted-foreground whitespace-nowrap">
                     {formatDate(payment.timestamp)}
                   </span>
                 </div>
