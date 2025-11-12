@@ -20,7 +20,7 @@ export function validateEmail(email: string): { success: boolean; data?: string;
     return { success: true, data: result.email };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     return { success: false, error: 'Invalid email format' };
   }
