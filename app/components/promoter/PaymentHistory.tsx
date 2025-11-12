@@ -78,28 +78,28 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+      <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6 relative z-10">
         {/* Search */}
         <div className="flex-1">
           <div className="relative">
-            <span className="icon-[mdi--magnify] absolute left-3 top-1/2 -translate-y-1/2 text-xl text-muted-foreground" />
+            <span className="icon-[mdi--magnify] absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-lg sm:text-xl text-muted-foreground" />
             <input
               type="text"
               placeholder="Search by recipient or address..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
+              className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-card border border-border rounded-lg sm:rounded-xl text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
             />
           </div>
         </div>
 
         {/* Status Filter */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide">
           {(['all', 'completed', 'pending', 'failed'] as const).map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
+              className={`px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
                 filter === status
                   ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
                   : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
@@ -112,17 +112,17 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="glass-card rounded-xl p-4 border border-border/50">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6 relative z-10">
+        <div className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 border border-border/50">
           <p className="text-xs text-muted-foreground mb-1">Total Transactions</p>
           <p className="text-2xl font-bold text-foreground">{filteredPayments.length}</p>
         </div>
-        <div className="glass-card rounded-xl p-4 border border-border/50">
+        <div className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 border border-border/50">
           <p className="text-xs text-muted-foreground mb-1">Total Sent</p>
           <p className="text-2xl font-bold gradient-text">${totalAmount.toLocaleString()}</p>
         </div>
-        <div className="glass-card rounded-xl p-4 border border-border/50">
-          <p className="text-xs text-muted-foreground mb-1">Pending Payments</p>
+        <div className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 border border-border/50 col-span-2 sm:col-span-1">
+          <p className="text-xs text-muted-foreground mb-1">Pending</p>
           <p className="text-2xl font-bold text-accent">
             {payments.filter(p => p.status === 'pending').length}
           </p>
@@ -130,56 +130,43 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
       </div>
 
       {/* Payment List */}
-      <div className="space-y-3">
+      <div className="space-y-3 relative z-10">
         {filteredPayments.map((payment, index) => (
           <div 
             key={payment.id}
-            className="glass-card rounded-xl p-4 md:p-5 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:scale-[1.01] cursor-pointer"
+            className="bg-card/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:scale-[1.01] cursor-pointer"
             style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              {/* Left: Recipient Info */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-                  <span className="icon-[mdi--account-music] text-2xl text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground mb-1">
-                    {payment.recipient}
-                  </p>
-                  <p className="text-xs text-muted-foreground font-mono truncate">
-                    {payment.walletAddress}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {formatDate(payment.timestamp)}
-                  </p>
-                </div>
+            <div className="flex items-start sm:items-center gap-2 sm:gap-3">
+              {/* Left: Icon */}
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                <span className="icon-[mdi--account-music] text-xl sm:text-2xl text-primary" />
+              </div>
+              
+              {/* Middle: Recipient Info */}
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-foreground text-sm sm:text-base mb-0.5">
+                  {payment.recipient}
+                </p>
+                <p className="text-xs text-muted-foreground font-mono truncate">
+                  {payment.walletAddress}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {formatDate(payment.timestamp)}
+                </p>
               </div>
 
-              {/* Right: Amount, Status, and Actions */}
-              <div className="flex items-center gap-4 md:gap-6">
-                {/* Amount */}
-                <div className="text-right">
-                  <p className="font-bold text-foreground text-xl">
-                    ${payment.amount}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {payment.currency}
-                  </p>
-                </div>
-
-                {/* Status */}
-                <div className={`px-3 py-1.5 rounded-lg border-2 flex items-center gap-1.5 ${getStatusBadge(payment.status)}`}>
-                  <span className={`${getStatusIcon(payment.status)} text-sm`} />
-                  <span className="text-xs font-bold capitalize">
+              {/* Right: Amount and Status */}
+              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                <p className="font-bold text-foreground text-base sm:text-xl whitespace-nowrap">
+                  ${payment.amount}
+                </p>
+                <div className={`px-2 sm:px-3 py-1 rounded-lg border-2 flex items-center gap-1 ${getStatusBadge(payment.status)}`}>
+                  <span className={`${getStatusIcon(payment.status)} text-xs sm:text-sm`} />
+                  <span className="text-[10px] sm:text-xs font-bold capitalize">
                     {payment.status}
                   </span>
                 </div>
-
-                {/* Actions */}
-                <button className="p-2 hover:bg-muted rounded-lg transition-colors duration-200 flex-shrink-0">
-                  <span className="icon-[mdi--dots-vertical] text-xl text-muted-foreground" />
-                </button>
               </div>
             </div>
 
