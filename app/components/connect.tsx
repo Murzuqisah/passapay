@@ -1,13 +1,24 @@
 'use client'
 
 import Image from 'next/image'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useConnect } from '../hooks/use-connect'
 import { stripAddress } from '../utils/formatters'
 
-export default function Connect() {
+interface ConnectProps {
+  showText?: boolean
+}
+
+export default function Connect({ showText = true }: ConnectProps) {
   const modalRef = useRef<HTMLDialogElement>(null)
   const [showOtherWallets, setShowOtherWallets] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
 
   const {
     listAccounts,
@@ -24,16 +35,18 @@ export default function Connect() {
   function handleSelectAccount(account: typeof selectedAccount) {
     if (account) {
       selectAccount(account)
-      modalRef.current?.close()
+      setIsModalOpen(false)
     }
   }
 
   function openConnectModal() {
-    modalRef.current?.showModal()
+    setIsModalOpen(true)
+    document.body.style.overflow = 'hidden'
   }
 
   function closeConnectModal() {
-    modalRef.current?.close()
+    setIsModalOpen(false)
+    document.body.style.overflow = 'unset'
   }
 
   function toggleOtherWallets() {
@@ -54,20 +67,23 @@ export default function Connect() {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+          className={showText 
+            ? "inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            : "inline-flex items-center justify-center w-10 h-10 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          }
           onClick={openConnectModal}
         >
           {!selectedAccount
             ? (
                 <>
-                  <span className="icon-[mdi--wallet] w-4 h-4" />
-                  <span>Connect Wallet</span>
+                  <span className="icon-[mdi--wallet] w-5 h-5" />
+                  {showText && <span>Connect Wallet</span>}
                 </>
               )
             : (
                 <>
                   <span className="icon-[mdi--wallet] w-4 h-4" />
-                  <span className="hidden sm:block">{selectedAccount.name}</span>
+                  {showText && <span className="hidden sm:block">{selectedAccount.name}</span>}
                   <Image
                     src={connectedWallet?.logo.src || ''}
                     alt={connectedWallet?.logo.alt || ''}
@@ -93,10 +109,18 @@ export default function Connect() {
           : null}
       </div>
 
-      {/* Modal using HTML dialog element */}
-      <dialog ref={modalRef} className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
-        <div className="bg-background border rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="p-6">
+      {/* Modal Overlay */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ position: 'fixed' }}>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm" 
+            onClick={closeConnectModal}
+          />
+          
+          {/* Modal Content */}
+          <div className="relative bg-background border rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto z-10">
+            <div className="p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold">
@@ -160,21 +184,21 @@ export default function Connect() {
           {installedWallets.length > 0
             ? (
                 <div className="mb-6">
-                  <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-3">
                     Installed
                   </h3>
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                     {installedWallets.map(wallet => (
                       <div
                         key={wallet.installUrl}
-                        className={`card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow ${
+                        className={`p-4 border rounded-lg cursor-pointer hover:shadow-md transition-all ${
                           isWalletConnected(wallet)
-                            ? 'border-success'
-                            : 'border-base-300 hover:border-primary'
+                            ? 'border-green-500 bg-green-50 dark:bg-green-950'
+                            : 'border-border hover:border-primary'
                         }`}
                         onClick={() => connect(wallet)}
                       >
-                        <div className="card-body items-center text-center">
+                        <div className="flex flex-col items-center text-center space-y-3">
                           <div className="relative">
                             <Image
                               src={wallet.logo.src}
@@ -185,19 +209,19 @@ export default function Connect() {
                             />
                             {isWalletConnected(wallet)
                               ? (
-                                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-success rounded-full flex items-center justify-center">
+                                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
                                     <span className="icon-[mdi--check] w-2 h-2 text-white" />
                                   </div>
                                 )
                               : null}
                           </div>
-                          <div className="text-xs font-medium text-black">
+                          <div className="text-sm font-medium">
                             {wallet.title}
                           </div>
                           <button
                             type="button"
                             disabled={isConnecting === wallet.extensionName}
-                            className="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
+                            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg text-sm font-medium hover:bg-secondary/80 transition-colors w-full"
                           >
                             {isConnecting === wallet.extensionName
                               ? (
@@ -234,10 +258,10 @@ export default function Connect() {
             ? (
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs text-gray-500 uppercase tracking-wider">
+                    <h3 className="text-sm font-medium text-muted-foreground">
                       Other wallets
                     </h3>
-                    <button type="button" className="btn btn-ghost btn-sm" onClick={toggleOtherWallets}>
+                    <button type="button" className="px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors" onClick={toggleOtherWallets}>
                       {showOtherWallets ? 'Hide' : 'Show'}
                       <span
                         className={showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'}
@@ -250,24 +274,24 @@ export default function Connect() {
                           {availableWallets.map(wallet => (
                             <div
                               key={wallet.installUrl}
-                              className="card card-compact bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all"
+                              className="p-4 border rounded-lg hover:border-primary hover:shadow-md transition-all opacity-60"
                             >
-                              <div className="card-body items-center text-center">
+                              <div className="flex flex-col items-center text-center space-y-3">
                                 <Image
                                   src={wallet.logo.src}
                                   alt={wallet.logo.alt}
                                   width={48}
                                   height={48}
-                                  className="w-12 h-12 opacity-60"
+                                  className="w-12 h-12"
                                 />
-                                <div className="text-xs font-medium text-black">
+                                <div className="text-sm font-medium">
                                   {wallet.title}
                                 </div>
                                 <a
                                   href={wallet.installUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
+                                  className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg text-sm font-medium hover:bg-secondary/80 transition-colors w-full inline-flex items-center justify-center gap-2"
                                 >
                                   <span>Download</span>
                                   <span className="icon-[mdi--download]" />
@@ -281,9 +305,13 @@ export default function Connect() {
                 </div>
               )
             : null}
+            </div>
           </div>
         </div>
-      </dialog>
+      )}
+      
+      {/* Hidden dialog for ref management */}
+      <dialog ref={modalRef} className="hidden" />
     </>
   )
 }

@@ -26,13 +26,11 @@ export default function Home() {
       <HowItWorksSection />
       <CTASection />
 
-      {selectedAccount ? (
+      {selectedAccount && (
         <>
           <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
           <DashboardContent activeTab={activeTab} selectedAccount={selectedAccount} />
         </>
-      ) : (
-        <WalletPrompt />
       )}
 
       <Footer />

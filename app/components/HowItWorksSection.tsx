@@ -3,9 +3,10 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
 import { User, Globe, Wallet } from "lucide-react";
+import Connect from "./connect";
 
 const steps = [
-  { num: "01", title: "Create Your Profile", desc: "Set up your artist profile in minutes. Showcase your work and connect with fans.", icon: User },
+  { num: "01", title: "Connect Your Wallet", desc: "Connect your digital wallet to get started. This is your secure gateway to receiving payments.", icon: User },
   { num: "02", title: "Share Your Art", desc: "Get your personalized link to share across social media, concerts, and exhibitions.", icon: Globe },
   { num: "03", title: "Earn & Create", desc: "Receive instant support from fans and reinvest in your artistic journey.", icon: Wallet }
 ];
@@ -44,18 +45,25 @@ export function HowItWorksSection() {
               transition={{ duration: 0.5, delay: index * 0.2 }}
               className="relative"
             >
-              <Card className="glass-card text-center group hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-8">
-                  <div className="relative inline-block mb-6">
-                    <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mx-auto">
-                      <step.icon className="w-8 h-8 text-primary-foreground" />
+              <Card className="glass-card text-center group hover:shadow-lg transition-all duration-300 h-full">
+                <CardContent className="p-6 flex flex-col justify-between h-full min-h-[240px]">
+                  <div className="flex-1 flex flex-col">
+                    <div className="relative inline-block mb-4">
+                      <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mx-auto">
+                        <step.icon className="w-8 h-8 text-primary-foreground" />
+                      </div>
+                      <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center">
+                        <span className="text-sm font-bold text-primary">{step.num}</span>
+                      </div>
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center">
-                      <span className="text-sm font-bold text-primary">{step.num}</span>
-                    </div>
+                    <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                    <p className="text-muted-foreground flex-1">{step.desc}</p>
                   </div>
-                  <h3 className="text-xl font-bold mb-4">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.desc}</p>
+                  {index === 0 && (
+                    <div className="mt-4">
+                      <Connect showText={false} />
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
