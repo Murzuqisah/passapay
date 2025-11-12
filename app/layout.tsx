@@ -41,25 +41,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-        <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            suppressHydrationWarning={true}
-          >
-            <Script 
-              src="https://consent.cookiefirst.com/consent.js" 
-              data-cookiefirst-key={process.env.NEXT_PUBLIC_C15T_URL}
-              strategy="afterInteractive"
-            />
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-    	</body>
-        </html>
-      )
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning={true}
+      >
+        <Script
+          src="https://consent.cookiefirst.com/consent.js"
+          data-cookiefirst-key={process.env.NEXT_PUBLIC_C15T_URL}
+          strategy="afterInteractive"
+        />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  )
 }
