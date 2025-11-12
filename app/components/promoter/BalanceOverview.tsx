@@ -49,40 +49,40 @@ export function BalanceOverview({ balance }: BalanceOverviewProps) {
         {/* Token Balances */}
         <div className="grid grid-cols-2 gap-2 sm:gap-4">
           {/* USDC Balance */}
-          <div className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 border border-border/50">
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
-              <div className="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <span className="icon-[token-branded--usdc] text-base sm:text-2xl text-primary" />
+          <div className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 border border-border/50 text-center">
+            <div className="mb-1 sm:mb-2">
+              <div className="flex justify-center mb-1">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="icon-[token-branded--usdc] text-base sm:text-xl text-primary" />
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs text-muted-foreground">USDC</p>
-                <p className="text-sm sm:text-lg font-bold text-foreground truncate">
-                  {showBalance ? balance.usdc : '••••••'}
-                </p>
-              </div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground font-medium mb-0.5">USDC</p>
+              <p className="text-sm sm:text-lg font-bold text-foreground">
+                {showBalance ? balance.usdc : '••••••'}
+              </p>
             </div>
-            <div className="flex items-center gap-0.5 sm:gap-1 text-[10px] sm:text-xs text-muted-foreground">
-              <span className="icon-[mdi--trending-up] text-xs sm:text-sm text-primary flex-shrink-0" />
-              <span className="truncate">Available</span>
+            <div className="flex items-center justify-center gap-0.5 sm:gap-1 text-[10px] sm:text-xs text-muted-foreground">
+              <span className="icon-[mdi--trending-up] text-xs sm:text-sm text-primary" />
+              <span>Available</span>
             </div>
           </div>
 
           {/* DOT Balance */}
-          <div className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 border border-border/50">
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
-              <div className="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                <span className="icon-[token-branded--dot] text-base sm:text-2xl text-accent" />
+          <div className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 border border-border/50 text-center">
+            <div className="mb-1 sm:mb-2">
+              <div className="flex justify-center mb-1">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                  <span className="icon-[token-branded--dot] text-base sm:text-xl text-accent" />
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs text-muted-foreground">DOT</p>
-                <p className="text-sm sm:text-lg font-bold text-foreground truncate">
-                  {showBalance ? balance.dot : '••••••'}
-                </p>
-              </div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground font-medium mb-0.5">DOT</p>
+              <p className="text-sm sm:text-lg font-bold text-foreground">
+                {showBalance ? balance.dot : '••••••'}
+              </p>
             </div>
-            <div className="flex items-center gap-0.5 sm:gap-1 text-[10px] sm:text-xs text-muted-foreground">
-              <span className="icon-[mdi--gas-station] text-xs sm:text-sm text-accent flex-shrink-0" />
-              <span className="truncate">For fees</span>
+            <div className="flex items-center justify-center gap-0.5 sm:gap-1 text-[10px] sm:text-xs text-muted-foreground">
+              <span className="icon-[mdi--gas-station] text-xs sm:text-sm text-accent" />
+              <span>For fees</span>
             </div>
           </div>
         </div>
