@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 interface BalanceOverviewProps {
   balance: {
     usdc: string
@@ -9,81 +11,96 @@ interface BalanceOverviewProps {
 }
 
 export function BalanceOverview({ balance }: BalanceOverviewProps) {
+  const [showBalance, setShowBalance] = useState(true)
+
   return (
-    <div className="section-glass rounded-2xl p-6 md:p-8 relative overflow-hidden border-2 border-border/50">
+    <div className="section-glass rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 relative overflow-hidden border-2 border-border/50">
       {/* Decorative gradient */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl opacity-50" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl opacity-50 hidden sm:block" />
       
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl md:text-2xl font-bold text-foreground">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">
             Balance Overview
           </h2>
-          <span className="icon-[mdi--wallet] text-3xl text-primary" />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowBalance(!showBalance)}
+              className="p-2 hover:bg-muted rounded-lg transition-colors duration-200"
+              title={showBalance ? 'Hide balance' : 'Show balance'}
+            >
+              <span className={`${showBalance ? 'icon-[mdi--eye-off]' : 'icon-[mdi--eye]'} text-xl sm:text-2xl text-muted-foreground hover:text-foreground`} />
+            </button>
+            <span className="icon-[mdi--wallet] text-2xl sm:text-3xl text-primary" />
+          </div>
         </div>
 
         {/* Main Balance */}
-        <div className="mb-8">
-          <p className="text-sm text-muted-foreground mb-2">Total Balance (USD)</p>
-          <div className="flex items-baseline gap-2">
-            <span className="text-4xl md:text-5xl font-bold gradient-text">
-              ${balance.usdValue}
+        <div className="mb-6 sm:mb-8">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2">Total Balance (USD)</p>
+          <div className="flex items-baseline gap-1 sm:gap-2">
+            <span className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text">
+              {showBalance ? `$${balance.usdValue}` : '••••••'}
             </span>
-            <span className="text-sm text-muted-foreground">USD</span>
+            <span className="text-xs sm:text-sm text-muted-foreground">USD</span>
           </div>
         </div>
 
         {/* Token Balances */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {/* USDC Balance */}
-          <div className="glass-card rounded-xl p-4 border border-border/50">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="icon-[token-branded--usdc] text-2xl text-primary" />
+          <div className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 border border-border/50">
+            <div className="flex flex-col gap-2 mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="icon-[token-branded--usdc] text-xl sm:text-2xl text-primary" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">USDC</p>
-                <p className="text-lg font-bold text-foreground">{balance.usdc}</p>
+                <p className="text-base sm:text-lg font-bold text-foreground">
+                  {showBalance ? balance.usdc : '••••••'}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <span className="icon-[mdi--trending-up] text-sm text-primary" />
-              <span>Available for payments</span>
+              <span className="icon-[mdi--trending-up] text-sm text-primary flex-shrink-0" />
+              <span className="truncate">Available</span>
             </div>
           </div>
 
           {/* DOT Balance */}
-          <div className="glass-card rounded-xl p-4 border border-border/50">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                <span className="icon-[token-branded--dot] text-2xl text-accent" />
+          <div className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 border border-border/50">
+            <div className="flex flex-col gap-2 mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                <span className="icon-[token-branded--dot] text-xl sm:text-2xl text-accent" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">DOT</p>
-                <p className="text-lg font-bold text-foreground">{balance.dot}</p>
+                <p className="text-base sm:text-lg font-bold text-foreground">
+                  {showBalance ? balance.dot : '••••••'}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <span className="icon-[mdi--gas-station] text-sm text-accent" />
-              <span>For transaction fees</span>
+              <span className="icon-[mdi--gas-station] text-sm text-accent flex-shrink-0" />
+              <span className="truncate">For fees</span>
             </div>
           </div>
         </div>
 
         {/* Quick Stats */}
-        <div className="mt-6 pt-6 border-t border-border/50">
-          <div className="grid grid-cols-3 gap-4 text-center">
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border/50">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
             <div>
-              <p className="text-2xl font-bold text-primary">24</p>
-              <p className="text-xs text-muted-foreground mt-1">Total Payments</p>
+              <p className="text-xl sm:text-2xl font-bold text-primary">24</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Total Payments</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-accent">$45.2K</p>
-              <p className="text-xs text-muted-foreground mt-1">Total Sent</p>
+              <p className="text-xl sm:text-2xl font-bold text-accent">$45.2K</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Total Sent</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">12</p>
-              <p className="text-xs text-muted-foreground mt-1">Artists Paid</p>
+              <p className="text-xl sm:text-2xl font-bold text-foreground">12</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Artists Paid</p>
             </div>
           </div>
         </div>
