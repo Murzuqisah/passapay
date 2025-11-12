@@ -14,7 +14,7 @@ interface OnboardingData {
 
 interface OnboardingModalProps {
   isOpen: boolean
-  onComplete: (data: OnboardingData) => void
+  onComplete: () => void
 }
 
 export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
@@ -52,22 +52,39 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
         body: JSON.stringify(userData)
       })
       
+      const result = await response.json()
+      
       if (response.ok) {
-        onComplete(data)
+        // Save to localStorage if using fallback
+        if (result.useLocalStorage) {
+          const { saveUserProfile } = await import('../lib/local-storage')
+          saveUserProfile(userData)
+        }
+        console.log('Profile created successfully:', result)
+        onComplete()
       } else {
+        console.error('Failed to create profile:', result)
         // Queue for retry
         const { addToQueue } = await import('../lib/sync-queue')
         addToQueue('/api/users', 'POST', userData)
-        onComplete(data)
+        // Still complete onboarding to not block user
+        onComplete()
       }
-    } catch {
+    } catch (error) {
+      console.error('Network error during profile creation:', error)
       // Queue for retry on network error
       const { addToQueue } = await import('../lib/sync-queue')
-      addToQueue('/api/users', 'POST', {
+      const userData = {
         ...data,
         walletAddress: selectedAccount?.address
-      })
-      onComplete(data)
+      }
+      addToQueue('/api/users', 'POST', userData)
+      
+      // Save to localStorage as fallback
+      const { saveUserProfile } = await import('../lib/local-storage')
+      saveUserProfile(userData)
+      
+      onComplete()
     } finally {
       setIsSubmitting(false)
     }

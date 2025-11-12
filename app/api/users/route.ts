@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({ success: true, user }, { status: 201 })
     } else {
-      // Client-side storage fallback
+      // Client-side storage fallback - don't actually store here, let client handle it
       return NextResponse.json({ 
         success: true, 
         user: { walletAddress, userType, name, email, country, genre, organization },
@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ exists: true, user }, { status: 200 })
     } else {
+      // When no database connection, always indicate localStorage usage
       return NextResponse.json({ exists: false, useLocalStorage: true }, { status: 200 })
     }
   } catch (error) {

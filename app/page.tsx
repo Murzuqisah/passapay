@@ -20,8 +20,12 @@ export default function Home() {
 
   useEffect(() => {
     const checkUserProfile = async () => {
-      if (!selectedAccount?.address) return
+      if (!selectedAccount?.address) {
+        console.log('No wallet connected')
+        return
+      }
 
+      console.log('Checking user profile for:', selectedAccount.address)
       setIsCheckingUser(true)
       
       // Try to sync queued requests
@@ -31,17 +35,26 @@ export default function Home() {
       try {
         const response = await fetch(`/api/users?walletAddress=${selectedAccount.address}`)
         const data = await response.json()
+        console.log('User check response:', data)
         
         if (data.useLocalStorage) {
           const { userExists } = await import('./lib/local-storage')
-          if (!userExists(selectedAccount.address)) {
+          const exists = userExists(selectedAccount.address)
+          console.log('User exists in localStorage:', exists)
+          if (!exists) {
+            console.log('Showing onboarding modal')
             setShowOnboarding(true)
           }
         } else if (!data.exists) {
+          console.log('User does not exist in database, showing onboarding')
           setShowOnboarding(true)
+        } else {
+          console.log('User exists, profile complete')
         }
       } catch (error) {
         console.error('Error checking user profile:', error)
+        // Show onboarding on error to not block user
+        setShowOnboarding(true)
       } finally {
         setIsCheckingUser(false)
       }
@@ -52,6 +65,11 @@ export default function Home() {
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false)
+    // Force re-check of user profile after onboarding
+    if (selectedAccount?.address) {
+      setIsCheckingUser(true)
+      setTimeout(() => setIsCheckingUser(false), 1000)
+    }
   }
 
   return (
