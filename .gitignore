@@ -44,3 +44,7 @@ next-env.d.ts
 # Descriptors
 app/descriptors
 
+PR.txt
+.env*
+SECURITY.md
+security_pr.txt

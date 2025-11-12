@@ -8,8 +8,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { walletAddress, userType, name, email, country, genre, organization } = body
 
-    if (USE_MONGODB) {
-      await connectDB()
+    const dbConnection = await connectDB()
+    
+    if (USE_MONGODB && dbConnection) {
       const existingUser = await User.findOne({ walletAddress })
       if (existingUser) {
         return NextResponse.json({ error: 'User already exists' }, { status: 400 })
@@ -50,8 +51,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Wallet address required' }, { status: 400 })
     }
 
-    if (USE_MONGODB) {
-      await connectDB()
+    const dbConnection = await connectDB()
+    
+    if (USE_MONGODB && dbConnection) {
       const user = await User.findOne({ walletAddress })
 
       if (!user) {
@@ -73,8 +75,9 @@ export async function PUT(request: NextRequest) {
     const body = await request.json()
     const { walletAddress, name, email, country, genre, organization } = body
 
-    if (USE_MONGODB) {
-      await connectDB()
+    const dbConnection = await connectDB()
+    
+    if (USE_MONGODB && dbConnection) {
       const user = await User.findOneAndUpdate(
         { walletAddress },
         { name, email, country, genre, organization },
