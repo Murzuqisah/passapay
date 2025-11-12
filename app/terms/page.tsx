@@ -55,7 +55,7 @@ export default function TermsOfService() {
                 <li><strong>Transaction History:</strong> Comprehensive blockchain-verified payment records</li>
               </ul>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                <strong>Blockchain Technology:</strong> Our platform utilizes Polkadot's interoperable blockchain infrastructure to ensure secure, transparent, and immutable transaction records. All payments are cryptographically secured and can be independently verified on the blockchain.
+                <strong>Blockchain Technology:</strong> Our platform utilizes Polkadot&apos;s interoperable blockchain infrastructure to ensure secure, transparent, and immutable transaction records. All payments are cryptographically secured and can be independently verified on the blockchain.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 <strong>Regulatory Compliance:</strong> While blockchain technology enables borderless transactions, users remain responsible for compliance with their local tax obligations and financial regulations. PassaPay provides transaction records to assist with tax reporting requirements.

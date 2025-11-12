@@ -35,7 +35,7 @@ export function Footer() {
       if (result.success) {
         setEmail("");
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
     } finally {
       setIsLoading(false);
