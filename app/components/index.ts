@@ -17,4 +17,5 @@ export { Footer } from './Footer';
 export { default as AccountCard } from './account-card';
 export { default as SendPayment } from './send-payment';
 export { default as PaymentHistory } from './payment-history';
-export { default as ArtistProfile } from './artist-profile';
+export { default as DashboardSidebar } from './DashboardSidebar';
+export { default as DashboardNavbar } from './DashboardNavbar';

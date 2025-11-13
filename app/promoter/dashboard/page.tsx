@@ -1,14 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { Navbar } from '@/app/components'
+import DashboardSidebar from '../../components/DashboardSidebar'
 import {
   BalanceOverview,
   QuickSendButton,
   RecentPayments,
   PaymentHistory,
   SendPaymentModal
-} from '@/app/components/promoter'
+} from '../../components/promoter'
 
 // Dummy data
 const dummyBalance = {
@@ -89,8 +89,8 @@ export default function PromoterDashboard() {
   const [activeView, setActiveView] = useState<'overview' | 'history'>('overview')
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <DashboardSidebar userType="promoter">
+      <div className="min-h-screen bg-background">
 
       {/* Hero Section with Glass Effect */}
       <section className="relative pt-20 sm:pt-24 pb-8 sm:pb-12 overflow-hidden">
@@ -167,11 +167,12 @@ export default function PromoterDashboard() {
         </div>
       </section>
 
-      {/* Send Payment Modal */}
-      <SendPaymentModal
-        isOpen={showSendModal}
-        onClose={() => setShowSendModal(false)}
-      />
-    </div>
+        {/* Send Payment Modal */}
+        <SendPaymentModal
+          isOpen={showSendModal}
+          onClose={() => setShowSendModal(false)}
+        />
+      </div>
+    </DashboardSidebar>
   )
 }

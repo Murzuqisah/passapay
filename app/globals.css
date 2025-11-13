@@ -409,3 +409,85 @@
         background-position: 100% 50%;
     }
 }
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    33% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+    66% {
+        transform: translateY(5px) rotate(-1deg);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px hsl(var(--primary) / 0.5), 0 0 40px hsl(var(--primary) / 0.3);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+    animation: glow 2s ease-in-out infinite;
+}
+
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.gradient-border {
+    position: relative;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    padding: 2px;
+    border-radius: 1rem;
+}
+
+.gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: hsl(var(--background));
+    border-radius: calc(1rem - 2px);
+    z-index: -1;
+}
+
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}

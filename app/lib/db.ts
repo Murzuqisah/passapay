@@ -35,7 +35,7 @@ export async function connectDB() {
   try {
     cached.conn = await cached.promise
     return cached.conn
-  } catch (error) {
+  } catch {
     cached.promise = null
     console.warn('MongoDB connection failed, falling back to localStorage')
     return null
@@ -60,6 +60,6 @@ declare global {
    
   var mongoose: {
     conn: typeof import('mongoose') | null
-    promise: Promise<typeof import('mongoose')> | null
+    promise: Promise<typeof import('mongoose') | null> | null
   }
 }

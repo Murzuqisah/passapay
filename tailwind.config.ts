@@ -119,5 +119,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@iconify/tailwind').addIconSelectors(['mdi', 'lucide']),
+  ],
 } satisfies Config;
