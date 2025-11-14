@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { addIconSelectors } from '@iconify/tailwind';
 
 export default {
   darkMode: "class",
@@ -119,5 +120,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    addIconSelectors(['mdi', 'lucide']),
+  ],
 } satisfies Config;

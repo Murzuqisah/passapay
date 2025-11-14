@@ -3,12 +3,11 @@
 import AccountCard from './account-card';
 import SendPayment from './send-payment';
 import PaymentHistory from './payment-history';
-import ArtistProfile from './artist-profile';
 import { unifyAddress } from '../utils/formatters';
 import { chainKeys } from '../utils/sdk';
 
 interface DashboardContentProps {
-  activeTab: 'dashboard' | 'send' | 'history' | 'profile';
+  activeTab: 'dashboard' | 'send' | 'history';
   selectedAccount: { address: string };
 }
 
@@ -30,7 +29,6 @@ export function DashboardContent({ activeTab, selectedAccount }: DashboardConten
 
         {activeTab === 'send' && <SendPayment />}
         {activeTab === 'history' && <PaymentHistory />}
-        {activeTab === 'profile' && <ArtistProfile />}
       </div>
     </section>
   );

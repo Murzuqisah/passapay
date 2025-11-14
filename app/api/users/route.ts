@@ -8,8 +8,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { walletAddress, userType, name, email, country, genre, organization } = body
 
-    if (USE_MONGODB) {
-      await connectDB()
+    const dbConnection = await connectDB()
+    
+    if (USE_MONGODB && dbConnection) {
       const existingUser = await User.findOne({ walletAddress })
       if (existingUser) {
         return NextResponse.json({ error: 'User already exists' }, { status: 400 })
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({ success: true, user }, { status: 201 })
     } else {
-      // Client-side storage fallback
+      // Client-side storage fallback - don't actually store here, let client handle it
       return NextResponse.json({ 
         success: true, 
         user: { walletAddress, userType, name, email, country, genre, organization },
@@ -50,8 +51,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Wallet address required' }, { status: 400 })
     }
 
-    if (USE_MONGODB) {
-      await connectDB()
+    const dbConnection = await connectDB()
+    
+    if (USE_MONGODB && dbConnection) {
       const user = await User.findOne({ walletAddress })
 
       if (!user) {
@@ -60,6 +62,7 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ exists: true, user }, { status: 200 })
     } else {
+      // When no database connection, always indicate localStorage usage
       return NextResponse.json({ exists: false, useLocalStorage: true }, { status: 200 })
     }
   } catch (error) {
@@ -73,8 +76,9 @@ export async function PUT(request: NextRequest) {
     const body = await request.json()
     const { walletAddress, name, email, country, genre, organization } = body
 
-    if (USE_MONGODB) {
-      await connectDB()
+    const dbConnection = await connectDB()
+    
+    if (USE_MONGODB && dbConnection) {
       const user = await User.findOneAndUpdate(
         { walletAddress },
         { name, email, country, genre, organization },

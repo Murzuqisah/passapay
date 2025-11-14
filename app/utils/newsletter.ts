@@ -37,7 +37,5 @@ export async function subscribeToNewsletter(email: string): Promise<{ success: b
   }
   
   // In production, this would call your newsletter service API
-  console.log('Newsletter subscription:', email);
-  
   return { success: true, message: 'Successfully subscribed to newsletter!' };
 }

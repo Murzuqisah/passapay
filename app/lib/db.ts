@@ -9,8 +9,9 @@ if (!cached) {
 }
 
 export async function connectDB() {
+  // Return null if no MongoDB URI is provided (fallback to localStorage)
   if (!MONGODB_URI) {
-    throw new Error('Please define MONGODB_URI in .env file')
+    return null
   }
 
   if (cached.conn) {
@@ -21,21 +22,19 @@ export async function connectDB() {
     cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
     }).then((mongoose) => {
-      console.log('MongoDB connected')
       return mongoose
-    }).catch((error) => {
-      console.error('MongoDB error:', error.message)
+    }).catch(() => {
       cached.promise = null
-      throw error
+      return null // Return null instead of throwing
     })
   }
 
   try {
     cached.conn = await cached.promise
     return cached.conn
-  } catch (error) {
+  } catch {
     cached.promise = null
-    throw error
+    return null
   }
 }
 
@@ -57,6 +56,6 @@ declare global {
    
   var mongoose: {
     conn: typeof import('mongoose') | null
-    promise: Promise<typeof import('mongoose')> | null
+    promise: Promise<typeof import('mongoose') | null> | null
   }
 }
