@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import DashboardSidebar from '../components/DashboardSidebar'
 
 interface UserProfile {
-  userType: string
+  userType: 'artist' | 'promoter'
   name: string
   email: string
   genre?: string
@@ -14,6 +14,7 @@ interface UserProfile {
   country: string
   walletAddress: string
   verified: boolean
+  createdAt?: string
 }
 
 export default function ArtistDashboard() {
@@ -81,7 +82,8 @@ export default function ArtistDashboard() {
           name: profile.name,
           email: profile.email,
           genre: profile.genre,
-          country: profile.country
+          country: profile.country,
+          userType: profile.userType
         })
       })
 

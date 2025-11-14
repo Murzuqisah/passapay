@@ -166,14 +166,14 @@ export default function DashboardSidebar({ userType, children }: SidebarProps) {
                       key={item.href}
                       href={item.href}
                       className={`group relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${isActive
-                          ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-lg shadow-primary/20 border border-primary/20'
-                          : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
+                        ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-lg shadow-primary/20 border border-primary/20'
+                        : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
                         } ${isCollapsed ? 'justify-center px-2' : ''}`}
                       onClick={() => setIsOpen(false)}
                     >
                       <div className={`relative p-2 rounded-lg transition-all duration-300 ${isActive
-                          ? 'bg-primary/10 text-primary'
-                          : 'bg-sidebar-accent/30 text-sidebar-foreground/60 group-hover:bg-sidebar-accent/50 group-hover:text-sidebar-foreground'
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-sidebar-accent/30 text-sidebar-foreground/60 group-hover:bg-sidebar-accent/50 group-hover:text-sidebar-foreground'
                         }`}>
                         <span className={`${item.icon} w-4 h-4 text-current`} />
                         {item.isNew && (
