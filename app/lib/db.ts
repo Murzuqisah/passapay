@@ -23,7 +23,7 @@ export async function connectDB() {
       bufferCommands: false,
     }).then((mongoose) => {
       return mongoose
-    }).catch((error) => {
+    }).catch(() => {
       cached.promise = null
       return null // Return null instead of throwing
     })

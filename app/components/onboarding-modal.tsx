@@ -73,7 +73,7 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
         // Still complete onboarding to not block user
         onComplete()
       }
-    } catch (error) {
+    } catch {
       // Queue for retry on network error
       const { addToQueue } = await import('../lib/sync-queue')
       const userData = {
