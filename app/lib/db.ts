@@ -11,7 +11,6 @@ if (!cached) {
 export async function connectDB() {
   // Return null if no MongoDB URI is provided (fallback to localStorage)
   if (!MONGODB_URI) {
-    console.warn('No MONGODB_URI provided, using localStorage fallback')
     return null
   }
 
@@ -23,10 +22,8 @@ export async function connectDB() {
     cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
     }).then((mongoose) => {
-      console.log('MongoDB connected')
       return mongoose
     }).catch((error) => {
-      console.error('MongoDB error:', error.message)
       cached.promise = null
       return null // Return null instead of throwing
     })
@@ -37,7 +34,6 @@ export async function connectDB() {
     return cached.conn
   } catch {
     cached.promise = null
-    console.warn('MongoDB connection failed, falling back to localStorage')
     return null
   }
 }

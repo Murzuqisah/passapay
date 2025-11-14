@@ -63,12 +63,10 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
           const { saveUserProfile } = await import('../lib/local-storage')
           saveUserProfile(userData)
         }
-        console.log('Profile created successfully:', result)
         onComplete()
         // Redirect to appropriate dashboard
         router.push(data.userType === 'artist' ? '/artist' : '/promoter')
       } else {
-        console.error('Failed to create profile:', result)
         // Queue for retry
         const { addToQueue } = await import('../lib/sync-queue')
         addToQueue('/api/users', 'POST', userData)
@@ -76,7 +74,6 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
         onComplete()
       }
     } catch (error) {
-      console.error('Network error during profile creation:', error)
       // Queue for retry on network error
       const { addToQueue } = await import('../lib/sync-queue')
       const userData = {
