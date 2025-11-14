@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useConnect } from '../hooks/use-connect'
+import { useMetaMask } from '../hooks/use-metamask'
 import { stripAddress } from '../utils/formatters'
 
 interface ConnectProps {
@@ -48,6 +49,8 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
     disconnect,
   } = useConnect()
 
+  const metamask = useMetaMask()
+
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = 'hidden'
@@ -59,9 +62,9 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
     }
   }, [isModalOpen])
 
-  async function handleSelectAccount(account: typeof selectedAccount) {
+  async function handleSelectAccount(account: typeof selectedAccount, isMetaMask = false) {
     if (account) {
-      selectAccount(account)
+      if (!isMetaMask) selectAccount(account)
 
       // Check if user needs onboarding
       try {
@@ -97,10 +100,12 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
   }
 
   async function handleConnectClick() {
-    if (selectedAccount) {
+    if (selectedAccount || metamask.account) {
+      const address = metamask.account?.address || selectedAccount?.address
+      if (!address) return
       // User is already connected, check if they have a profile and redirect
       try {
-        const response = await fetch(`/api/users?walletAddress=${selectedAccount.address}`)
+        const response = await fetch(`/api/users?walletAddress=${address}`)
         const data = await response.json()
 
         if (data.useLocalStorage) {
@@ -215,7 +220,7 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
           }
           onClick={handleConnectClick}
         >
-          {!selectedAccount ? (
+          {!selectedAccount && !metamask.account ? (
             <>
               <span className="icon-[mdi--wallet] w-5 h-5" />
               {showText && <span>Connect Wallet</span>}
@@ -223,8 +228,8 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
           ) : (
             <>
               <span className="icon-[mdi--wallet] w-4 h-4" />
-              {showText && <span className="hidden sm:block">{selectedAccount.name}</span>}
-              {connectedWallet?.logo && (
+              {showText && <span className="hidden sm:block">{metamask.account?.name || selectedAccount?.name}</span>}
+              {connectedWallet?.logo && !metamask.account && (
                 <Image
                   src={connectedWallet.logo.src}
                   alt={connectedWallet.logo.alt}
@@ -237,11 +242,14 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
           )}
         </button>
 
-        {selectedAccount && (
+        {(selectedAccount || metamask.account) && (
           <button
             type="button"
             className="inline-flex items-center justify-center p-2 border border-input bg-background rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
-            onClick={disconnect}
+            onClick={() => {
+              disconnect()
+              metamask.disconnect()
+            }}
           >
             <span className="icon-[mdi--logout] w-4 h-4" />
           </button>
@@ -485,6 +493,37 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
                             </div>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* MetaMask */}
+                  {metamask.isInstalled && (
+                    <div className="mb-6">
+                      <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        Ethereum Wallet (Moonbeam)
+                      </h3>
+                      <div
+                        className="p-4 border rounded-lg cursor-pointer hover:shadow-md transition-all hover:border-primary"
+                        onClick={async () => {
+                          await metamask.connect()
+                          if (metamask.account) {
+                            handleSelectAccount({ address: metamask.account.address, name: metamask.account.name } as any, true)
+                          }
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                              <span className="text-2xl">🦊</span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">MetaMask</p>
+                              <p className="text-xs text-muted-foreground">Connect via Moonbeam</p>
+                            </div>
+                          </div>
+                          {metamask.isConnecting && <span className="icon-[mdi--loading] animate-spin" />}
+                        </div>
                       </div>
                     </div>
                   )}
