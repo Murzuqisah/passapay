@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useConnect } from '../hooks/use-connect'
+import { useMetaMask } from '../hooks/use-metamask'
 import DashboardNavbar from './DashboardNavbar'
 
 interface SidebarProps {
@@ -29,7 +30,15 @@ export default function DashboardSidebar({ userType, children }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
   const { disconnect, selectedAccount } = useConnect()
+  const metamask = useMetaMask()
+
+  const handleLogout = () => {
+    disconnect()
+    metamask.disconnect()
+    router.push('/')
+  }
 
   const artistSections: NavSection[] = [
     {
@@ -226,7 +235,7 @@ export default function DashboardSidebar({ userType, children }: SidebarProps) {
             </Link>
 
             <button
-              onClick={disconnect}
+              onClick={handleLogout}
               className={`flex items-center gap-3 w-full px-3 py-3 text-sm font-medium text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all duration-200 ${isCollapsed ? 'justify-center px-2' : ''
                 }`}
             >
