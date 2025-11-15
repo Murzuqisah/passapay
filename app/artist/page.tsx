@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useConnect } from '../hooks/use-connect'
+import { useMetaMask } from '../hooks/use-metamask'
 import { useRouter } from 'next/navigation'
+import { BrowserProvider, formatEther } from 'ethers'
 import DashboardSidebar from '../components/DashboardSidebar'
 
 interface UserProfile {
@@ -26,16 +28,10 @@ export default function ArtistDashboard() {
   const [isSaving, setIsSaving] = useState(false)
   const [message, setMessage] = useState('')
 
-  // Placeholder data
-  const balance = "2,450.00"
-  const pendingPayments = 3
-  const completedPayments = 47
-
-  const recentTransactions = [
-    { id: 1, from: "Promoter A", amount: "500.00", status: "completed", date: "2025-01-10" },
-    { id: 2, from: "Promoter B", amount: "750.00", status: "pending", date: "2025-01-09" },
-    { id: 3, from: "Event Organizer", amount: "1,200.00", status: "completed", date: "2025-01-08" },
-  ]
+  const metamask = useMetaMask()
+  const [balance, setBalance] = useState('0.00')
+  const [transactions, setTransactions] = useState<any[]>([])
+  const [stats, setStats] = useState({ pending: 0, completed: 0, total: '0.00' })
 
   useEffect(() => {
     if (!selectedAccount) {
@@ -66,6 +62,68 @@ export default function ArtistDashboard() {
 
     fetchProfile()
   }, [selectedAccount, router])
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!metamask.account && !selectedAccount) return
+      
+      try {
+        if (window.ethereum) {
+          const provider = new BrowserProvider(window.ethereum)
+          const address = metamask.account?.address || selectedAccount?.address
+          if (address) {
+            const bal = await provider.getBalance(address)
+            setBalance(parseFloat(formatEther(bal)).toFixed(4))
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch balance:', error)
+      }
+    }
+
+    const fetchTransactions = async () => {
+      if (!selectedAccount) return
+      
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 8000)
+        
+        const response = await fetch(
+          `/api/transactions?address=${selectedAccount.address}`,
+          { signal: controller.signal }
+        )
+        clearTimeout(timeoutId)
+        
+        if (response.ok) {
+          const data = await response.json()
+          const txArray = Array.isArray(data) ? data : []
+          setTransactions(txArray.slice(0, 5))
+          
+          const pending = txArray.filter((tx: any) => tx.status === 'pending').length
+          const completed = txArray.filter((tx: any) => tx.status === 'completed').length
+          const total = txArray
+            .filter((tx: any) => tx.status === 'completed')
+            .reduce((sum: number, tx: any) => sum + parseFloat(tx.amount || 0), 0)
+          
+          setStats({ pending, completed, total: total.toFixed(2) })
+        }
+      } catch (error) {
+        console.error('Failed to fetch transactions:', error)
+        setTransactions([])
+        setStats({ pending: 0, completed: 0, total: '0.00' })
+      }
+    }
+
+    fetchBalance()
+    fetchTransactions()
+    
+    const interval = setInterval(() => {
+      fetchBalance()
+      fetchTransactions()
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [selectedAccount, metamask.account])
 
   const handleSaveProfile = async () => {
     if (!profile || !selectedAccount) return
@@ -156,7 +214,7 @@ export default function ArtistDashboard() {
               <span className="icon-[mdi--check-circle] w-4 h-4 text-green-600 dark:text-green-400" />
             </div>
           </div>
-          <div className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{completedPayments}</div>
+          <div className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{stats.completed}</div>
           <p className="text-xs text-muted-foreground">Performances paid</p>
         </div>
 
@@ -167,7 +225,7 @@ export default function ArtistDashboard() {
               <span className="icon-[mdi--clock] w-4 h-4 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
-          <div className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{pendingPayments}</div>
+          <div className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{stats.pending}</div>
           <p className="text-xs text-muted-foreground">Awaiting payment</p>
         </div>
 
@@ -189,7 +247,7 @@ export default function ArtistDashboard() {
               <span className="icon-[mdi--currency-usd] w-4 h-4 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
-          <div className="text-2xl lg:text-3xl font-bold text-foreground mb-1">USDC {balance}</div>
+          <div className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{balance} DEV</div>
           <p className="text-xs text-muted-foreground">Available balance</p>
         </div>
 
@@ -225,10 +283,10 @@ export default function ArtistDashboard() {
             </div>
           </div>
           <div className="p-6">
-            {recentTransactions.length > 0 ? (
+            {transactions.length > 0 ? (
               <div className="space-y-4">
-                {recentTransactions.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between py-3">
+                {transactions.map((tx) => (
+                  <div key={tx._id || tx.txHash} className="flex items-center justify-between py-3">
                     <div className="flex items-center gap-4">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${tx.status === "completed"
                         ? 'bg-green-100 dark:bg-green-900/30'
@@ -241,12 +299,16 @@ export default function ArtistDashboard() {
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">{tx.from}</p>
-                        <p className="text-sm text-muted-foreground">{tx.date}</p>
+                        <p className="font-medium text-foreground">
+                          {tx.fromAddress?.slice(0, 6)}...{tx.fromAddress?.slice(-4)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(tx.timestamp || tx.createdAt).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-foreground">${tx.amount}</p>
+                      <p className="font-semibold text-foreground">{tx.amount} DEV</p>
                       <p className={`text-xs capitalize ${tx.status === "completed"
                         ? 'text-green-600 dark:text-green-400'
                         : 'text-yellow-600 dark:text-yellow-400'
