@@ -5,7 +5,7 @@ import { useState } from 'react'
 interface BalanceOverviewProps {
   balance: {
     usdc: string
-    dot: string
+    dev: string
     usdValue: string
   }
 }
@@ -60,16 +60,16 @@ export function BalanceOverview({ balance }: BalanceOverviewProps) {
             <p className="text-[10px] sm:text-xs text-foreground/60">Available</p>
           </div>
 
-          {/* DOT Balance */}
+          {/* DEV Balance */}
           <div className="glass-card rounded-lg sm:rounded-xl py-2 px-2 sm:py-3 sm:px-3 border border-border/50 text-center">
             <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-1">
-              <span className="icon-[token-branded--dot] text-base sm:text-xl text-accent" />
+              <span className="icon-[mdi--currency-eth] text-base sm:text-xl text-accent" />
             </div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">DOT</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">DEV</p>
             <p className="text-sm sm:text-lg font-bold text-foreground">
-              {showBalance ? balance.dot : '••••••'}
+              {showBalance ? balance.dev : '••••••'}
             </p>
-            <p className="text-[10px] sm:text-xs text-foreground/60">For fees</p>
+            <p className="text-[10px] sm:text-xs text-foreground/60">Testnet</p>
           </div>
         </div>
 
