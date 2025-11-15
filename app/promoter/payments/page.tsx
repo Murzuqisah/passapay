@@ -1,10 +1,18 @@
+'use client'
+
+import DashboardSidebar from '../../components/DashboardSidebar'
+import ContractPayment from '../../components/promoter/contract-payment'
+
 export default function PaymentsPage() {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Send Payments</h1>
-      <div className="glass-card p-6 rounded-xl">
-        <p className="text-muted-foreground">Payment sending interface coming soon...</p>
+    <DashboardSidebar userType="promoter">
+      <div className="max-w-4xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold gradient-text mb-2">Send Payments</h1>
+          <p className="text-muted-foreground">Send payments to artists via smart contract</p>
+        </div>
+        <ContractPayment />
       </div>
-    </div>
+    </DashboardSidebar>
   )
 }
