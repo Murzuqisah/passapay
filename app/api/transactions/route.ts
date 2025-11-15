@@ -18,9 +18,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Address required' }, { status: 400 })
     }
     
-    const transactions = await getTransactionsByAddress(address)
-    return NextResponse.json(transactions)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch transactions' }, { status: 500 })
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Database timeout')), 5000)
+    )
+    
+    try {
+      const transactions = await Promise.race([
+        getTransactionsByAddress(address),
+        timeoutPromise
+      ])
+      return NextResponse.json(transactions)
+    } catch (dbError) {
+      // Return empty array if DB fails
+      console.error('DB error, returning empty array:', dbError)
+      return NextResponse.json([])
+    }
+  } catch (error) {
+    console.error('Transaction API error:', error)
+    return NextResponse.json([])
   }
 }

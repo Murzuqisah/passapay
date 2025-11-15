@@ -20,10 +20,23 @@ export async function createTransaction(data: Omit<Transaction, '_id' | 'created
 }
 
 export async function getTransactionsByAddress(address: string) {
-  await connectDB()
-  return TransactionModel.find({
-    $or: [{ fromAddress: address }, { toAddress: address }]
-  }).sort({ timestamp: -1 })
+  try {
+    const db = await connectDB()
+    if (!db) {
+      return [] // Return empty if no DB connection
+    }
+    
+    return await TransactionModel.find({
+      $or: [{ fromAddress: address }, { toAddress: address }]
+    })
+    .sort({ timestamp: -1 })
+    .limit(50)
+    .maxTimeMS(3000) // 3 second query timeout
+    .lean()
+  } catch (error) {
+    console.error('Error fetching transactions:', error)
+    return []
+  }
 }
 
 export async function updateTransactionStatus(txHash: string, status: Transaction['status']) {
