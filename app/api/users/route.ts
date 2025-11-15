@@ -8,6 +8,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { walletAddress, userType, name, email, country, genre, organization } = body
 
+    if (!walletAddress || !userType || !name || !email || !country) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    }
+
     const dbConnection = await connectDB()
     
     if (USE_MONGODB && dbConnection) {
@@ -16,20 +20,26 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'User already exists' }, { status: 400 })
       }
 
-      const user = await User.create({
+      const userData: any = {
         walletAddress,
         userType,
         name,
         email,
         country,
-        genre: userType === 'artist' ? genre : undefined,
-        organization: userType === 'promoter' ? organization : undefined,
         createdAt: new Date()
-      })
+      }
+
+      if (userType === 'artist' && genre) {
+        userData.genre = genre
+      }
+      if (userType === 'promoter' && organization) {
+        userData.organization = organization
+      }
+
+      const user = await User.create(userData)
 
       return NextResponse.json({ success: true, user }, { status: 201 })
     } else {
-      // Client-side storage fallback - don't actually store here, let client handle it
       return NextResponse.json({ 
         success: true, 
         user: { walletAddress, userType, name, email, country, genre, organization },
