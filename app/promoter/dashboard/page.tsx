@@ -1,7 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useConnect } from '../../hooks/use-connect'
+import { useMetaMask } from '../../hooks/use-metamask'
+import { BrowserProvider, formatEther } from 'ethers'
 import DashboardSidebar from '../../components/DashboardSidebar'
+import ContractPayment from '../../components/promoter/contract-payment'
 import {
   BalanceOverview,
   QuickSendButton,
@@ -10,83 +14,87 @@ import {
   SendPaymentModal
 } from '../../components/promoter'
 
-// Dummy data
-const dummyBalance = {
-  usdc: '12,450.00',
-  dot: '245.50',
-  usdValue: '14,892.75'
-}
 
-const dummyRecentPayments = [
-  {
-    id: '1',
-    recipient: 'Bien-Aimé Baraza',
-    walletAddress: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-    amount: '5,000.00',
-    currency: 'USDC',
-    timestamp: new Date('2024-11-10T14:30:00'),
-    status: 'completed' as const,
-    txHash: '0x1234...5678'
-  },
-  {
-    id: '2',
-    recipient: 'Sauti Sol',
-    walletAddress: '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
-    amount: '3,200.00',
-    currency: 'USDC',
-    timestamp: new Date('2024-11-09T18:45:00'),
-    status: 'completed' as const,
-    txHash: '0xabcd...efgh'
-  },
-  {
-    id: '3',
-    recipient: 'Nyashinski',
-    walletAddress: '5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy',
-    amount: '2,500.00',
-    currency: 'USDC',
-    timestamp: new Date('2024-11-08T20:15:00'),
-    status: 'completed' as const,
-    txHash: '0x9876...4321'
-  }
-]
-
-const dummyPaymentHistory = [
-  ...dummyRecentPayments,
-  {
-    id: '4',
-    recipient: 'Khaligraph Jones',
-    walletAddress: '5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw',
-    amount: '1,800.00',
-    currency: 'USDC',
-    timestamp: new Date('2024-11-07T16:20:00'),
-    status: 'completed' as const,
-    txHash: '0xdef1...2345'
-  },
-  {
-    id: '5',
-    recipient: 'Otile Brown',
-    walletAddress: '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL',
-    amount: '4,500.00',
-    currency: 'USDC',
-    timestamp: new Date('2024-11-06T12:00:00'),
-    status: 'completed' as const,
-    txHash: '0x5678...9abc'
-  },
-  {
-    id: '6',
-    recipient: 'Nadia Mukami',
-    walletAddress: '5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y',
-    amount: '2,100.00',
-    currency: 'USDC',
-    timestamp: new Date('2024-11-05T09:30:00'),
-    status: 'pending' as const,
-    txHash: '0xpend...ing1'
-  }
-]
 
 export default function PromoterDashboard() {
+  const { selectedAccount } = useConnect()
+  const metamask = useMetaMask()
   const [showSendModal, setShowSendModal] = useState(false)
   const [activeView, setActiveView] = useState<'overview' | 'history'>('overview')
+  const [balance, setBalance] = useState({ usdc: '0.00', dev: '0.00', usdValue: '0.00' })
+  const [recentPayments, setRecentPayments] = useState<any[]>([])
+  const [paymentHistory, setPaymentHistory] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!metamask.account && !selectedAccount) return
+      
+      try {
+        if (window.ethereum) {
+          const provider = new BrowserProvider(window.ethereum)
+          const address = metamask.account?.address || selectedAccount?.address
+          if (address) {
+            const bal = await provider.getBalance(address)
+            const devBalance = parseFloat(formatEther(bal)).toFixed(2)
+            setBalance({
+              usdc: '0.00',
+              dev: devBalance,
+              usdValue: (parseFloat(devBalance) * 0.5).toFixed(2)
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch balance:', error)
+      }
+    }
+
+    const fetchTransactions = async () => {
+      if (!selectedAccount && !metamask.account) return
+      
+      try {
+        const address = metamask.account?.address || selectedAccount?.address
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 8000)
+        
+        const response = await fetch(
+          `/api/transactions?address=${address}`,
+          { signal: controller.signal }
+        )
+        clearTimeout(timeoutId)
+        
+        if (response.ok) {
+          const data = await response.json()
+          const txArray = Array.isArray(data) ? data : []
+          const formatted = txArray.map((tx: any) => ({
+            id: tx._id || tx.txHash,
+            recipient: tx.toAddress,
+            walletAddress: tx.toAddress,
+            amount: tx.amount,
+            currency: 'DEV',
+            timestamp: new Date(tx.timestamp || tx.createdAt),
+            status: tx.status,
+            txHash: tx.txHash
+          }))
+          setRecentPayments(formatted.slice(0, 3))
+          setPaymentHistory(formatted)
+        }
+      } catch (error) {
+        console.error('Failed to fetch transactions:', error)
+        setRecentPayments([])
+        setPaymentHistory([])
+      }
+    }
+
+    fetchBalance()
+    fetchTransactions()
+    
+    const interval = setInterval(() => {
+      fetchBalance()
+      fetchTransactions()
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [selectedAccount, metamask.account])
 
   return (
     <DashboardSidebar userType="promoter">
@@ -142,16 +150,16 @@ export default function PromoterDashboard() {
                 {/* Balance and Quick Actions */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                   <div className="lg:col-span-2">
-                    <BalanceOverview balance={dummyBalance} />
+                    <BalanceOverview balance={balance} />
                   </div>
                   <div>
-                    <QuickSendButton onClick={() => setShowSendModal(true)} />
+                    <ContractPayment />
                   </div>
                 </div>
 
                 {/* Recent Payments */}
                 <RecentPayments
-                  payments={dummyRecentPayments}
+                  payments={recentPayments}
                   onViewAll={() => setActiveView('history')}
                 />
               </div>
@@ -160,7 +168,7 @@ export default function PromoterDashboard() {
             {/* History View */}
             {activeView === 'history' && (
               <div className="animate-in">
-                <PaymentHistory payments={dummyPaymentHistory} />
+                <PaymentHistory payments={paymentHistory} />
               </div>
             )}
           </div>
