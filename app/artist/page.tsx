@@ -6,6 +6,7 @@ import { useMetaMask } from '../hooks/use-metamask'
 import { useRouter } from 'next/navigation'
 import { BrowserProvider, formatEther } from 'ethers'
 import DashboardSidebar from '../components/DashboardSidebar'
+import ClaimPayments from '../components/artist/claim-payments'
 
 interface UserProfile {
   userType: 'artist' | 'promoter'
@@ -34,21 +35,30 @@ export default function ArtistDashboard() {
   const [stats, setStats] = useState({ pending: 0, completed: 0, total: '0.00' })
 
   useEffect(() => {
-    if (!selectedAccount) {
-      router.push('/')
-      return
-    }
+    const address = metamask.account?.address 
+    console.log(address)
+    // if (!address) {
+    //   router.push('/')
+    //   return
+    // }
 
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`/api/users?walletAddress=${selectedAccount.address}`)
+        const response = await fetch(`/api/users?walletAddress=${address}`)
         const data = await response.json()
 
         if (data.exists && data.user) {
-          setProfile(data.user)
+          // Merge user data with artistProfile if exists
+          const profileData = {
+            ...data.user,
+            genre: data.artistProfile?.genre || data.user.genre,
+            verified: data.artistProfile?.verified || false
+          }
+          setProfile(profileData)
         } else if (data.useLocalStorage) {
+          
           const { getUserProfile } = await import('../lib/local-storage')
-          const localProfile = getUserProfile(selectedAccount.address)
+          const localProfile = getUserProfile(address)
           if (localProfile) {
             setProfile(localProfile)
           }
@@ -61,11 +71,11 @@ export default function ArtistDashboard() {
     }
 
     fetchProfile()
-  }, [selectedAccount, router])
+  }, [metamask.account, selectedAccount, router])
 
   useEffect(() => {
     const fetchBalance = async () => {
-      if (!metamask.account && !selectedAccount) return
+      if (!metamask.account) return
       
       try {
         if (window.ethereum) {
@@ -82,14 +92,15 @@ export default function ArtistDashboard() {
     }
 
     const fetchTransactions = async () => {
-      if (!selectedAccount) return
+      const address = metamask.account?.address || selectedAccount?.address
+      if (!address) return
       
       try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 8000)
         
         const response = await fetch(
-          `/api/transactions?address=${selectedAccount.address}`,
+          `/api/transactions?address=${address}`,
           { signal: controller.signal }
         )
         clearTimeout(timeoutId)
@@ -126,7 +137,8 @@ export default function ArtistDashboard() {
   }, [selectedAccount, metamask.account])
 
   const handleSaveProfile = async () => {
-    if (!profile || !selectedAccount) return
+    const address = metamask.account?.address || selectedAccount?.address
+    if (!profile || !address) return
 
     setIsSaving(true)
     setMessage('')
@@ -136,7 +148,7 @@ export default function ArtistDashboard() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          walletAddress: selectedAccount.address,
+          walletAddress: address,
           name: profile.name,
           email: profile.email,
           genre: profile.genre,
@@ -169,7 +181,7 @@ export default function ArtistDashboard() {
     }
   }
 
-  if (!selectedAccount) {
+  if (!metamask.account && !selectedAccount) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -262,6 +274,9 @@ export default function ArtistDashboard() {
           <p className="text-xs text-muted-foreground">Payment issues</p>
         </div>
       </div>
+
+      {/* Claim Payments Section */}
+      <ClaimPayments />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Recent Transactions */}

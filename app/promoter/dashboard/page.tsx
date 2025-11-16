@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useConnect } from '../../hooks/use-connect'
 import { useMetaMask } from '../../hooks/use-metamask'
+import { useToast } from '../../hooks/use-toast'
 import { BrowserProvider, formatEther } from 'ethers'
 import DashboardSidebar from '../../components/DashboardSidebar'
 import ContractPayment from '../../components/promoter/contract-payment'
@@ -17,8 +19,10 @@ import {
 
 
 export default function PromoterDashboard() {
+  const router = useRouter()
   const { selectedAccount } = useConnect()
   const metamask = useMetaMask()
+  const { showError } = useToast()
   const [showSendModal, setShowSendModal] = useState(false)
   const [activeView, setActiveView] = useState<'overview' | 'history'>('overview')
   const [balance, setBalance] = useState({ usdc: '0.00', dev: '0.00', usdValue: '0.00' })
@@ -26,15 +30,55 @@ export default function PromoterDashboard() {
   const [paymentHistory, setPaymentHistory] = useState<any[]>([])
 
   useEffect(() => {
+    // Check if user exists in database
+    const checkUserAccess = async () => {
+      const walletAddress = metamask.account?.address || selectedAccount?.address
+      if (!walletAddress) {
+        showError('Please connect your wallet to access the promoter dashboard')
+        setTimeout(() => router.push('/'), 2000)
+        return
+      }
+
+      try {
+        const response = await fetch(`/api/users?walletAddress=${walletAddress}`)
+        const data = await response.json()
+
+        if (!data.exists) {
+          showError('Please complete your profile to access the promoter dashboard')
+          setTimeout(() => router.push('/'), 2000)
+          return
+        }
+
+        // Verify user is a promoter
+        if (data.user?.userType !== 'promoter') {
+          showError('This dashboard is only for promoters')
+          setTimeout(() => router.push('/'), 2000)
+        }
+      } catch (error) {
+        console.error('Error checking user access:', error)
+        showError('Unable to verify your access')
+        setTimeout(() => router.push('/'), 2000)
+      }
+    }
+
+    if (metamask.account?.address || selectedAccount?.address) {
+      checkUserAccess()
+    }
+  }, [metamask.account, selectedAccount, showError, router])
+
+  useEffect(() => {
     const fetchBalance = async () => {
-      if (!metamask.account && !selectedAccount) return
+      console.log(metamask.account)
+      if (!metamask.account ) return
       
       try {
         if (window.ethereum) {
           const provider = new BrowserProvider(window.ethereum)
-          const address = metamask.account?.address || selectedAccount?.address
+          const address = metamask.account?.address
+          console.log(address)
           if (address) {
             const bal = await provider.getBalance(address)
+            console.log(bal)
             const devBalance = parseFloat(formatEther(bal)).toFixed(2)
             setBalance({
               usdc: '0.00',
