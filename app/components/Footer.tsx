@@ -94,8 +94,9 @@ export function Footer() {
                   className="flex-1"
                   disabled={isLoading}
                   required
+                  suppressHydrationWarning
                 />
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} suppressHydrationWarning>
                   {isLoading ? 'Subscribing...' : 'Subscribe'}
                 </Button>
               </div>

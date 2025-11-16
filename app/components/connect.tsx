@@ -110,9 +110,9 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
 
         if (data.useLocalStorage) {
           const { userExists, getUserProfile } = await import('../lib/local-storage')
-          const exists = userExists(selectedAccount.address)
+          const exists = userExists(address)
           if (exists) {
-            const profile = getUserProfile(selectedAccount.address)
+            const profile = getUserProfile(address)
             router.push(profile?.userType === 'artist' ? '/artist' : '/promoter/dashboard')
             return
           }
@@ -158,6 +158,7 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
 
   const handleOnboardingSubmit = async () => {
     setIsSubmitting(true)
+    try {
       const walletAddress = selectedAccount?.address || metamask.account?.address || ''
       const userData = {
         ...onboardingData,
@@ -206,7 +207,7 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
   }
 
   const canProceedStep1 = onboardingData.userType !== ''
-  const canProceedStep2 = onboardingData.name && onboardingData.email && onboardingData.country
+  const canProceedStep2 = onboardingData.userType === 'artist' ? (onboardingData.name && onboardingData.email && onboardingData.country) : (onboardingData.email && onboardingData.country)
   const canProceedStep3 = onboardingData.userType === 'artist' ? onboardingData.genre : onboardingData.organization
 
   return (
@@ -351,16 +352,18 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
                     <div className="space-y-6">
                       <h3 className="text-xl font-semibold">Basic Information</h3>
                       <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-2">Full Name *</label>
-                          <input
-                            type="text"
-                            className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                            value={onboardingData.name}
-                            onChange={(e) => setOnboardingData({ ...onboardingData, name: e.target.value })}
-                            placeholder="Enter your full name"
-                          />
-                        </div>
+                        {onboardingData.userType === 'artist' && (
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Full Name *</label>
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                              value={onboardingData.name}
+                              onChange={(e) => setOnboardingData({ ...onboardingData, name: e.target.value })}
+                              placeholder="Enter your full name"
+                            />
+                          </div>
+                        )}
                         <div>
                           <label className="block text-sm font-medium mb-2">Email *</label>
                           <input
