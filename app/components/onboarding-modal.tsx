@@ -96,7 +96,7 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
   }
 
   const canProceedStep1 = data.userType !== ''
-  const canProceedStep2 = data.name && data.email && data.country
+  const canProceedStep2 = data.userType === 'artist' ? (data.name && data.email && data.country) : (data.email && data.country)
   const canProceedStep3 = data.userType === 'artist' ? data.genre : data.organization
 
   if (!isOpen) return null
@@ -176,16 +176,18 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
             <div className="space-y-6">
               <h3 className="text-xl font-semibold text-card-foreground">Basic Information</h3>
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-card-foreground mb-2">Full Name *</label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    value={data.name}
-                    onChange={(e) => setData({ ...data, name: e.target.value })}
-                    placeholder="Enter your full name"
-                  />
-                </div>
+                {data.userType === 'artist' && (
+                  <div>
+                    <label className="block text-sm font-medium text-card-foreground mb-2">Full Name *</label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      value={data.name}
+                      onChange={(e) => setData({ ...data, name: e.target.value })}
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-medium text-card-foreground mb-2">Email *</label>
                   <input

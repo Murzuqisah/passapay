@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectDB, User } from '@/app/lib/db'
+import { connectDB, User, ArtistProfile } from '@/app/lib/db'
 
 const USE_MONGODB = true
 
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { walletAddress, userType, name, email, country, genre, organization } = body
 
-    if (!walletAddress || !userType || !name || !email || !country) {
+    if (!walletAddress || !userType || !email) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
@@ -20,23 +20,40 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'User already exists' }, { status: 400 })
       }
 
-      const userData: any = {
+      const userName = userType === 'promoter' ? organization : name
+      if (!userName) {
+        return NextResponse.json({ error: 'Name or organization required' }, { status: 400 })
+      }
+
+      if (!country) {
+        return NextResponse.json({ error: 'Country is required' }, { status: 400 })
+      }
+
+      const user = await User.create({
+        email,
+        name: userName,
         walletAddress,
         userType,
-        name,
-        email,
         country,
-        createdAt: new Date()
-      }
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
 
-      if (userType === 'artist' && genre) {
-        userData.genre = genre
+      // If artist, create separate artist profile
+      if (userType === 'artist') {
+        if (!genre) {
+          return NextResponse.json({ error: 'Genre required for artists' }, { status: 400 })
+        }
+        await ArtistProfile.create({
+          userId: user._id,
+          name,
+          genre,
+          country,
+          verified: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
       }
-      if (userType === 'promoter' && organization) {
-        userData.organization = organization
-      }
-
-      const user = await User.create(userData)
 
       return NextResponse.json({ success: true, user }, { status: 201 })
     } else {
@@ -70,7 +87,17 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ exists: false }, { status: 200 })
       }
 
-      return NextResponse.json({ exists: true, user }, { status: 200 })
+      // If artist, fetch artist profile too
+      let artistProfile = null
+      if (user.userType === 'artist') {
+        artistProfile = await ArtistProfile.findOne({ userId: user._id })
+      }
+
+      return NextResponse.json({ 
+        exists: true, 
+        user,
+        artistProfile 
+      }, { status: 200 })
     } else {
       // When no database connection, always indicate localStorage usage
       return NextResponse.json({ exists: false, useLocalStorage: true }, { status: 200 })
@@ -84,22 +111,34 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const { walletAddress, name, email, country, genre, organization } = body
+    const { walletAddress, name, email, country, genre } = body
 
     const dbConnection = await connectDB()
     
     if (USE_MONGODB && dbConnection) {
-      const user = await User.findOneAndUpdate(
-        { walletAddress },
-        { name, email, country, genre, organization },
-        { new: true }
-      )
+      const user = await User.findOne({ walletAddress })
 
       if (!user) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 })
       }
 
-      return NextResponse.json({ success: true, user }, { status: 200 })
+      // Update user data
+      const updatedUser = await User.findOneAndUpdate(
+        { walletAddress },
+        { name, email, country, updatedAt: new Date() },
+        { new: true }
+      )
+
+      // If artist, update artist profile
+      if (user.userType === 'artist') {
+        await ArtistProfile.findOneAndUpdate(
+          { userId: user._id },
+          { name, genre, country, updatedAt: new Date() },
+          { new: true }
+        )
+      }
+
+      return NextResponse.json({ success: true, user: updatedUser }, { status: 200 })
     } else {
       return NextResponse.json({ success: true, useLocalStorage: true }, { status: 200 })
     }

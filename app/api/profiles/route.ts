@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createArtistProfile, getArtistProfile, updateArtistProfile } from '@/app/lib/services/user.service'
+import { createArtistProfile, getArtistProfile, updateArtistProfile, getUserProfile } from '@/app/lib/services/user.service'
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,12 +13,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = request.nextUrl.searchParams.get('userId')
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
+    const walletAddress = request.nextUrl.searchParams.get('userId')
+    if (!walletAddress) {
+      return NextResponse.json({ error: 'Wallet address required' }, { status: 400 })
     }
     
-    const profile = await getArtistProfile(userId)
+    const profile = await getUserProfile(walletAddress)
     if (!profile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
