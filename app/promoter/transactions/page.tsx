@@ -6,10 +6,21 @@ import { useMetaMask } from '../../hooks/use-metamask'
 import DashboardSidebar from '../../components/DashboardSidebar'
 import { PaymentHistory } from '../../components/promoter'
 
+interface Payment {
+  id: string
+  recipient: string
+  walletAddress: string
+  amount: string
+  currency: string
+  timestamp: Date
+  status: 'completed' | 'pending' | 'failed'
+  txHash: string
+}
+
 export default function TransactionsPage() {
   const { selectedAccount } = useConnect()
   const metamask = useMetaMask()
-  const [transactions, setTransactions] = useState<unknown[]>([])
+  const [transactions, setTransactions] = useState<Payment[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -23,14 +34,14 @@ export default function TransactionsPage() {
         if (res.ok) {
           const data = await res.json()
           const formatted = (Array.isArray(data) ? data : []).map((tx: Record<string, unknown>) => ({
-            id: tx._id || tx.txHash,
-            recipient: tx.toAddress,
-            walletAddress: tx.toAddress,
-            amount: tx.amount,
+            id: String(tx._id || tx.txHash || ''),
+            recipient: String(tx.toAddress || ''),
+            walletAddress: String(tx.toAddress || ''),
+            amount: String(tx.amount || '0'),
             currency: 'DEV',
-            timestamp: new Date(tx.timestamp || tx.createdAt),
-            status: tx.status,
-            txHash: tx.txHash
+            timestamp: new Date(String(tx.timestamp || tx.createdAt || Date.now())),
+            status: (tx.status as 'completed' | 'pending' | 'failed') || 'pending',
+            txHash: String(tx.txHash || '')
           }))
           setTransactions(formatted)
         }

@@ -31,7 +31,7 @@ export default function ArtistDashboard() {
 
   const metamask = useMetaMask()
   const [balance, setBalance] = useState('0.00')
-  const [transactions, setTransactions] = useState<unknown[]>([])
+  const [transactions, setTransactions] = useState<Array<Record<string, unknown>>>([])
   const [stats, setStats] = useState({ pending: 0, completed: 0, total: '0.00' })
 
   useEffect(() => {
@@ -50,8 +50,7 @@ export default function ArtistDashboard() {
             verified: data.artistProfile?.verified || false
           }
           setProfile(profileData)
-        } else if (data.useLocalStorage) {
-          
+        } else if (data.useLocalStorage && address) {
           const { getUserProfile } = await import('../lib/local-storage')
           const localProfile = getUserProfile(address)
           if (localProfile) {
@@ -295,14 +294,21 @@ export default function ArtistDashboard() {
           <div className="p-6">
             {transactions.length > 0 ? (
               <div className="space-y-4">
-                {transactions.map((tx) => (
-                  <div key={tx._id || tx.txHash} className="flex items-center justify-between py-3">
+                {transactions.map((tx) => {
+                  const txId = String(tx._id || tx.txHash || Math.random())
+                  const status = String(tx.status || 'pending')
+                  const fromAddr = String(tx.fromAddress || '')
+                  const timestamp = String(tx.timestamp || tx.createdAt || Date.now())
+                  const amount = String(tx.amount || '0')
+                  
+                  return (
+                  <div key={txId} className="flex items-center justify-between py-3">
                     <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${tx.status === "completed"
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${status === "completed"
                         ? 'bg-green-100 dark:bg-green-900/30'
                         : 'bg-yellow-100 dark:bg-yellow-900/30'
                         }`}>
-                        {tx.status === "completed" ? (
+                        {status === "completed" ? (
                           <span className="icon-[mdi--check-circle] w-5 h-5 text-green-600 dark:text-green-400" />
                         ) : (
                           <span className="icon-[mdi--clock] w-5 h-5 text-yellow-600 dark:text-yellow-400" />
@@ -310,22 +316,22 @@ export default function ArtistDashboard() {
                       </div>
                       <div>
                         <p className="font-medium text-foreground">
-                          {tx.fromAddress?.slice(0, 6)}...{tx.fromAddress?.slice(-4)}
+                          {fromAddr.slice(0, 6)}...{fromAddr.slice(-4)}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          {new Date(tx.timestamp || tx.createdAt).toLocaleDateString()}
+                          {new Date(timestamp).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-foreground">{tx.amount} DEV</p>
-                      <p className={`text-xs capitalize ${tx.status === "completed"
+                      <p className="font-semibold text-foreground">{amount} DEV</p>
+                      <p className={`text-xs capitalize ${status === "completed"
                         ? 'text-green-600 dark:text-green-400'
                         : 'text-yellow-600 dark:text-yellow-400'
-                        }`}>{tx.status}</p>
+                        }`}>{status}</p>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             ) : (
               <div className="text-center py-12">

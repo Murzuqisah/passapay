@@ -15,7 +15,16 @@ import {
   SendPaymentModal
 } from '../../components/promoter'
 
-
+interface Payment {
+  id: string
+  recipient: string
+  walletAddress: string
+  amount: string
+  currency: string
+  timestamp: Date
+  status: 'completed' | 'pending' | 'failed'
+  txHash: string
+}
 
 export default function PromoterDashboard() {
   const router = useRouter()
@@ -25,8 +34,8 @@ export default function PromoterDashboard() {
   const [showSendModal, setShowSendModal] = useState(false)
   const [activeView, setActiveView] = useState<'overview' | 'history'>('overview')
   const [balance, setBalance] = useState({ usdc: '0.00', dev: '0.00', usdValue: '0.00' })
-  const [recentPayments, setRecentPayments] = useState<unknown[]>([])
-  const [paymentHistory, setPaymentHistory] = useState<unknown[]>([])
+  const [recentPayments, setRecentPayments] = useState<Payment[]>([])
+  const [paymentHistory, setPaymentHistory] = useState<Payment[]>([])
 
   useEffect(() => {
     // Check if user exists in database
@@ -109,14 +118,14 @@ export default function PromoterDashboard() {
           const data = await response.json()
           const txArray = Array.isArray(data) ? data : []
           const formatted = txArray.map((tx: Record<string, unknown>) => ({
-            id: tx._id || tx.txHash,
-            recipient: tx.toAddress,
-            walletAddress: tx.toAddress,
-            amount: tx.amount,
+            id: String(tx._id || tx.txHash || ''),
+            recipient: String(tx.toAddress || ''),
+            walletAddress: String(tx.toAddress || ''),
+            amount: String(tx.amount || '0'),
             currency: 'DEV',
-            timestamp: new Date(tx.timestamp || tx.createdAt),
-            status: tx.status,
-            txHash: tx.txHash
+            timestamp: new Date(String(tx.timestamp || tx.createdAt || Date.now())),
+            status: (tx.status as 'completed' | 'pending' | 'failed') || 'pending',
+            txHash: String(tx.txHash || '')
           }))
           setRecentPayments(formatted.slice(0, 3))
           setPaymentHistory(formatted)

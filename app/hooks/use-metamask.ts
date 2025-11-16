@@ -32,13 +32,15 @@ export function useMetaMask() {
 
     // Listen for account changes
     if (window.ethereum) {
-      window.ethereum.on('accountsChanged', handleAccountsChanged)
+      const handler = (...args: unknown[]) => handleAccountsChanged(args[0] as string[])
+      window.ethereum.on('accountsChanged', handler)
       window.ethereum.on('chainChanged', () => window.location.reload())
     }
 
     return () => {
       if (window.ethereum) {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
+        const handler = (...args: unknown[]) => handleAccountsChanged(args[0] as string[])
+        window.ethereum.removeListener('accountsChanged', handler)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +62,7 @@ export function useMetaMask() {
     setIsConnecting(true)
     try {
       // Request accounts first
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[]
       
       // Try to switch to Moonbeam, add if not exists
       try {
