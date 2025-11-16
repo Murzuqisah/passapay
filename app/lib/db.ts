@@ -39,18 +39,54 @@ export async function connectDB() {
 }
 
 const userSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  name: { type: String, required: true },
   walletAddress: { type: String, required: true, unique: true },
   userType: { type: String, enum: ['artist', 'promoter'], required: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true },
   country: { type: String, required: true },
-  genre: { type: String },
-  organization: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+})
+
+const artistProfileSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  name: { type: String, required: true },
+  genre: { type: String, required: true },
+  country: { type: String, required: true },
   verified: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+})
+
+const transactionSchema = new mongoose.Schema({
+  paymentId: { type: String, required: true, unique: true },
+  txHash: { type: String, required: true },
+  fromAddress: { type: String, required: true },
+  toAddress: { type: String, required: true },
+  amount: { type: String, required: true },
+  currency: { type: String, default: 'DEV' },
+  type: { type: String, enum: ['sent', 'received'], required: true },
+  status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
+  chainId: { type: String },
+  blockNumber: { type: Number },
+  timestamp: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now }
 })
 
-export const User = mongoose.models.User || mongoose.model('User', userSchema)
+// Delete cached models to ensure schema updates are applied
+if (mongoose.models.User) {
+  delete mongoose.models.User
+}
+if (mongoose.models.ArtistProfile) {
+  delete mongoose.models.ArtistProfile
+}
+if (mongoose.models.Transaction) {
+  delete mongoose.models.Transaction
+}
+
+export const User = mongoose.model('User', userSchema)
+export const ArtistProfile = mongoose.model('ArtistProfile', artistProfileSchema)
+export const Transaction = mongoose.model('Transaction', transactionSchema)
 
 declare global {
    

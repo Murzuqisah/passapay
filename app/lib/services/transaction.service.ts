@@ -1,18 +1,5 @@
-import { connectDB } from '../db'
+import { connectDB, Transaction as TransactionModel } from '../db'
 import { Transaction } from '../types'
-import mongoose from 'mongoose'
-
-const transactionSchema = new mongoose.Schema({
-  txHash: String,
-  fromAddress: String,
-  toAddress: String,
-  amount: String,
-  status: String,
-  timestamp: Date,
-  createdAt: { type: Date, default: Date.now }
-})
-
-const TransactionModel = mongoose.models.Transaction || mongoose.model('Transaction', transactionSchema)
 
 export async function createTransaction(data: Omit<Transaction, '_id' | 'createdAt'>) {
   await connectDB()
