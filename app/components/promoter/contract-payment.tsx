@@ -95,6 +95,13 @@ export default function ContractPayment() {
     }
   }
 
+  const handleShowConfirm = async () => {
+    if (!amount || !netAmount) {
+      await handleCalculateFee()
+    }
+    setShowConfirm(true)
+  }
+
   if (!account) {
     return (
       <div className="card bg-card border border-border">
@@ -203,7 +210,7 @@ export default function ContractPayment() {
 
           <button
             className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50"
-            onClick={() => setShowConfirm(true)}
+            onClick={handleShowConfirm}
             disabled={!artistAddress || !amount || isProcessing}
           >
             {isProcessing ? 'Processing...' : 'Create Payment'}
@@ -236,7 +243,7 @@ export default function ContractPayment() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Artist Receives:</span>
-                <span className="font-semibold">{netAmount || '...'} DEV</span>
+                <span className="font-semibold text-green-600 dark:text-green-400">{netAmount || (parseFloat(amount) * 0.975).toFixed(4)} DEV</span>
               </div>
             </div>
             <div className="flex gap-3">

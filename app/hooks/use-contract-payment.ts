@@ -43,20 +43,51 @@ export function useContractPayment() {
       setResult('Transaction submitted...')
       const receipt = await tx.wait()
 
-      const event = receipt.logs.find((log: any) => {
-        try {
-          const parsed = contract.interface.parseLog(log)
-          return parsed?.name === 'PaymentCreated'
-        } catch {
-          return false
+      // Extract paymentId from event logs
+      // PaymentCreated event signature: 0xcc23fcd8942b36b52cc0aa3d8c37f0e8518bb0659c4d12741568ea9e4629eed5
+      let paymentIdValue = ''
+      const paymentCreatedSignature = '0xcc23fcd8942b36b52cc0aa3d8c37f0e8518bb0659c4d12741568ea9e4629eed5'
+      
+      for (const log of receipt.logs) {
+        if (log.topics[0] === paymentCreatedSignature) {
+          // PaymentId is topics[1]
+          paymentIdValue = log.topics[1]
+          setPaymentId(paymentIdValue)
+          console.log('PaymentId extracted:', paymentIdValue)
+          break
         }
-      })
-
-      if (event) {
-        const parsed = contract.interface.parseLog(event)
-        setPaymentId(parsed?.args[0])
       }
-
+      // Save to database
+      if (paymentIdValue) {
+        try {
+          const response = await fetch('/api/transactions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              paymentId: paymentIdValue,
+              txHash: receipt.hash,
+              fromAddress: await signer.getAddress(),
+              toAddress: artistAddress,
+              amount: amountInDEV,
+              currency: 'DEV',
+              type: 'sent',
+              status: 'pending',
+              chainId: String(receipt.chainId),
+              blockNumber: receipt.blockNumber
+            })
+          })
+          if (response.ok) {
+            console.log('Transaction saved to database')
+          } else {
+            console.error('Failed to save transaction:', await response.text())
+          }
+        } catch (dbError) {
+          console.error('Failed to save to database:', dbError)
+        }
+      } else {
+        console.warn('No paymentId found in transaction logs')
+      }
+      
       setResult('Payment created successfully!')
       return receipt
 
@@ -88,6 +119,21 @@ export function useContractPayment() {
       setResult('Completing payment...')
       
       await tx.wait()
+      
+      // Update database status
+      try {
+        await fetch('/api/transactions/update', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            paymentId,
+            status: 'completed'
+          })
+        })
+      } catch (dbError) {
+        console.error('Failed to update database:', dbError)
+      }
+      
       setResult('Payment completed!')
 
     } catch (error: any) {
@@ -166,7 +212,11 @@ export function useContractPayment() {
         provider
       )
 
-      const netAmount = await contract.calculateNetAmount(parseEther(grossAmount))
+      const feePercentage = await contract.platformFeePercentage()
+      const grossAmountWei = parseEther(grossAmount)
+      const fee = (grossAmountWei * feePercentage) / BigInt(10000)
+      const netAmount = grossAmountWei - fee
+      
       return formatEther(netAmount)
 
     } catch (error: any) {
