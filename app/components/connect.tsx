@@ -158,11 +158,11 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
 
   const handleOnboardingSubmit = async () => {
     setIsSubmitting(true)
-    try {
+      const walletAddress = selectedAccount?.address || metamask.account?.address || ''
       const userData = {
         ...onboardingData,
         userType: onboardingData.userType as 'artist' | 'promoter',
-        walletAddress: selectedAccount?.address || ''
+        walletAddress
       }
 
       const response = await fetch('/api/users', {
@@ -187,10 +187,11 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
       }
     } catch {
       const { addToQueue } = await import('../lib/sync-queue')
+      const walletAddress = selectedAccount?.address || metamask.account?.address || ''
       const userData = {
         ...onboardingData,
         userType: onboardingData.userType as 'artist' | 'promoter',
-        walletAddress: selectedAccount?.address || ''
+        walletAddress
       }
       addToQueue('/api/users', 'POST', userData)
 

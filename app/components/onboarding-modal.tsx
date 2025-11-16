@@ -65,7 +65,7 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
         }
         onComplete()
         // Redirect to appropriate dashboard
-        router.push(data.userType === 'artist' ? '/artist' : '/promoter')
+        router.push(data.userType === 'artist' ? '/artist' : '/promoter/dashboard')
       } else {
         // Queue for retry
         const { addToQueue } = await import('../lib/sync-queue')
@@ -89,7 +89,7 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
 
       onComplete()
       // Redirect to appropriate dashboard even on error
-      router.push(data.userType === 'artist' ? '/artist' : '/promoter')
+      router.push(data.userType === 'artist' ? '/artist' : '/promoter/dashboard')
     } finally {
       setIsSubmitting(false)
     }
