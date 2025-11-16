@@ -9,7 +9,7 @@ import { PaymentHistory } from '../../components/promoter'
 export default function TransactionsPage() {
   const { selectedAccount } = useConnect()
   const metamask = useMetaMask()
-  const [transactions, setTransactions] = useState<any[]>([])
+  const [transactions, setTransactions] = useState<unknown[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function TransactionsPage() {
         const res = await fetch(`/api/transactions?address=${address}`)
         if (res.ok) {
           const data = await res.json()
-          const formatted = (Array.isArray(data) ? data : []).map((tx: any) => ({
+          const formatted = (Array.isArray(data) ? data : []).map((tx: Record<string, unknown>) => ({
             id: tx._id || tx.txHash,
             recipient: tx.toAddress,
             walletAddress: tx.toAddress,
