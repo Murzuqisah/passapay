@@ -14,7 +14,7 @@ interface Artist {
 
 export default function ContractPayment() {
   const { account } = useMetaMask()
-  const { createPayment, completePayment, calculateNetAmount, isProcessing, result, paymentId } = useContractPayment()
+  const { createPayment, calculateNetAmount, isProcessing, result, paymentId } = useContractPayment()
   
   const [artistAddress, setArtistAddress] = useState('')
   const [artistName, setArtistName] = useState('')

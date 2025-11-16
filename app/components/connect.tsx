@@ -512,7 +512,7 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
                         onClick={async () => {
                           await metamask.connect()
                           if (metamask.account) {
-                            handleSelectAccount({ address: metamask.account.address, name: metamask.account.name } as any, true)
+                            handleSelectAccount({ address: metamask.account.address, name: metamask.account.name } as typeof selectedAccount, true)
                           }
                         }}
                       >

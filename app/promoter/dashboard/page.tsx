@@ -10,7 +10,6 @@ import DashboardSidebar from '../../components/DashboardSidebar'
 import ContractPayment from '../../components/promoter/contract-payment'
 import {
   BalanceOverview,
-  QuickSendButton,
   RecentPayments,
   PaymentHistory,
   SendPaymentModal
@@ -26,8 +25,8 @@ export default function PromoterDashboard() {
   const [showSendModal, setShowSendModal] = useState(false)
   const [activeView, setActiveView] = useState<'overview' | 'history'>('overview')
   const [balance, setBalance] = useState({ usdc: '0.00', dev: '0.00', usdValue: '0.00' })
-  const [recentPayments, setRecentPayments] = useState<any[]>([])
-  const [paymentHistory, setPaymentHistory] = useState<any[]>([])
+  const [recentPayments, setRecentPayments] = useState<unknown[]>([])
+  const [paymentHistory, setPaymentHistory] = useState<unknown[]>([])
 
   useEffect(() => {
     // Check if user exists in database
@@ -109,7 +108,7 @@ export default function PromoterDashboard() {
         if (response.ok) {
           const data = await response.json()
           const txArray = Array.isArray(data) ? data : []
-          const formatted = txArray.map((tx: any) => ({
+          const formatted = txArray.map((tx: Record<string, unknown>) => ({
             id: tx._id || tx.txHash,
             recipient: tx.toAddress,
             walletAddress: tx.toAddress,

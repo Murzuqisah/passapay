@@ -91,8 +91,8 @@ export function useContractPayment() {
       setResult('Payment created successfully!')
       return receipt
 
-    } catch (error: any) {
-      setResult(`Error: ${error.message}`)
+    } catch (error: unknown) {
+      setResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       throw error
     } finally {
       setIsProcessing(false)
@@ -136,8 +136,8 @@ export function useContractPayment() {
       
       setResult('Payment completed!')
 
-    } catch (error: any) {
-      setResult(`Error: ${error.message}`)
+    } catch (error: unknown) {
+      setResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       throw error
     } finally {
       setIsProcessing(false)
@@ -166,8 +166,8 @@ export function useContractPayment() {
       await tx.wait()
       setResult('Payment disputed!')
 
-    } catch (error: any) {
-      setResult(`Error: ${error.message}`)
+    } catch (error: unknown) {
+      setResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       throw error
     } finally {
       setIsProcessing(false)
@@ -195,7 +195,7 @@ export function useContractPayment() {
         status: Number(payment.status)
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching payment:', error)
       throw error
     }
@@ -219,7 +219,7 @@ export function useContractPayment() {
       
       return formatEther(netAmount)
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error calculating net amount:', error)
       throw error
     }

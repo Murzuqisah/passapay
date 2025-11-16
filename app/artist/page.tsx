@@ -31,16 +31,11 @@ export default function ArtistDashboard() {
 
   const metamask = useMetaMask()
   const [balance, setBalance] = useState('0.00')
-  const [transactions, setTransactions] = useState<any[]>([])
+  const [transactions, setTransactions] = useState<unknown[]>([])
   const [stats, setStats] = useState({ pending: 0, completed: 0, total: '0.00' })
 
   useEffect(() => {
-    const address = metamask.account?.address 
-    console.log(address)
-    // if (!address) {
-    //   router.push('/')
-    //   return
-    // }
+    const address = metamask.account?.address
 
     const fetchProfile = async () => {
       try {
@@ -110,11 +105,11 @@ export default function ArtistDashboard() {
           const txArray = Array.isArray(data) ? data : []
           setTransactions(txArray.slice(0, 5))
           
-          const pending = txArray.filter((tx: any) => tx.status === 'pending').length
-          const completed = txArray.filter((tx: any) => tx.status === 'completed').length
+          const pending = txArray.filter((tx: Record<string, unknown>) => tx.status === 'pending').length
+          const completed = txArray.filter((tx: Record<string, unknown>) => tx.status === 'completed').length
           const total = txArray
-            .filter((tx: any) => tx.status === 'completed')
-            .reduce((sum: number, tx: any) => sum + parseFloat(tx.amount || 0), 0)
+            .filter((tx: Record<string, unknown>) => tx.status === 'completed')
+            .reduce((sum: number, tx: Record<string, unknown>) => sum + parseFloat(String(tx.amount || 0)), 0)
           
           setStats({ pending, completed, total: total.toFixed(2) })
         }

@@ -41,6 +41,7 @@ export function useMetaMask() {
         window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function handleAccountsChanged(accounts: string[]) {
@@ -67,8 +68,8 @@ export function useMetaMask() {
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: MOONBEAM_CHAIN_ID }]
         })
-      } catch (error: any) {
-        if (error.code === 4902) {
+      } catch (error: unknown) {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 4902) {
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [MOONBEAM_PARAMS]

@@ -39,8 +39,8 @@ export function useDirectPayment() {
       setResult('Payment sent successfully!')
       return { feeTx, artistTx }
 
-    } catch (error: any) {
-      setResult(`Error: ${error.message}`)
+    } catch (error: unknown) {
+      setResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       throw error
     } finally {
       setIsProcessing(false)

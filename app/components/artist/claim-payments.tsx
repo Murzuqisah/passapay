@@ -20,6 +20,7 @@ export default function ClaimPayments() {
 
   useEffect(() => {
     fetchPendingPayments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
   const fetchPendingPayments = async () => {
