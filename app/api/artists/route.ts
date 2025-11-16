@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const dbConnection = await connectDB()
     
     if (dbConnection) {
-      const query: any = { userType: 'artist' }
+      const query: Record<string, unknown> = { userType: 'artist' }
       
       if (search) {
         query.$or = [

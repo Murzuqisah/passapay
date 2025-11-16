@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createArtistProfile, getArtistProfile, updateArtistProfile, getUserProfile } from '@/app/lib/services/user.service'
+import { createArtistProfile, updateArtistProfile, getUserProfile } from '@/app/lib/services/user.service'
 
 export async function POST(request: NextRequest) {
   try {

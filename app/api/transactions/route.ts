@@ -6,8 +6,8 @@ export async function POST(request: NextRequest) {
     const data = await request.json()
     const transaction = await createTransaction(data)
     return NextResponse.json(transaction)
-  } catch (error: any) {
-    console.error('Failed to create transaction:', error.message)
+  } catch (error: unknown) {
+    console.error('Failed to create transaction:', error instanceof Error ? error.message : 'Unknown error')
     return NextResponse.json({ error: 'Failed to create transaction' }, { status: 500 })
   }
 }
