@@ -45,23 +45,13 @@ export default function DashboardSidebar({ userType, children }: SidebarProps) {
       title: 'Overview',
       items: [
         { href: '/artist', label: 'Dashboard', icon: 'icon-[mdi--view-dashboard]' },
-        { href: '/artist/homepage', label: 'Homepage', icon: 'icon-[mdi--home]' },
+        { href: '/', label: 'Homepage', icon: 'icon-[mdi--home]' },
       ]
     },
     {
       title: 'Payments',
       items: [
-        { href: '/artist/earnings', label: 'Earnings', icon: 'icon-[mdi--cash-multiple]', badge: '$2,450' },
         { href: '/artist/transactions', label: 'Transactions', icon: 'icon-[mdi--swap-horizontal]' },
-        { href: '/artist/payouts', label: 'Payouts', icon: 'icon-[mdi--bank-transfer]' },
-      ]
-    },
-    {
-      title: 'Performance',
-      items: [
-        { href: '/artist/bookings', label: 'Bookings', icon: 'icon-[mdi--calendar-check]' },
-        { href: '/artist/venues', label: 'Venues', icon: 'icon-[mdi--map-marker]' },
-        { href: '/artist/contracts', label: 'Contracts', icon: 'icon-[mdi--file-document]', isNew: true },
       ]
     }
   ]
@@ -71,23 +61,20 @@ export default function DashboardSidebar({ userType, children }: SidebarProps) {
       title: 'Overview',
       items: [
         { href: '/promoter/dashboard', label: 'Dashboard', icon: 'icon-[mdi--view-dashboard]' },
-        { href: '/promoter/homepage', label: 'Homepage', icon: 'icon-[mdi--home]' },
+        { href: '/', label: 'Homepage', icon: 'icon-[mdi--home]' },
       ]
     },
     {
       title: 'Payments',
       items: [
         { href: '/promoter/payments', label: 'Send Payments', icon: 'icon-[mdi--send]' },
-        { href: '/promoter/transactions', label: 'Transactions', icon: 'icon-[mdi--swap-horizontal]' },
-        { href: '/promoter/history', label: 'Payment History', icon: 'icon-[mdi--history]' },
+        { href: '/promoter/history', label: 'Transactions', icon: 'icon-[mdi--history]' },
       ]
     },
     {
       title: 'Management',
       items: [
-        { href: '/promoter/events', label: 'Events', icon: 'icon-[mdi--calendar-star]' },
         { href: '/promoter/artists', label: 'Artists', icon: 'icon-[mdi--account-group]' },
-        { href: '/promoter/venues', label: 'Venues', icon: 'icon-[mdi--map-marker]' },
       ]
     }
   ]
@@ -249,11 +236,13 @@ export default function DashboardSidebar({ userType, children }: SidebarProps) {
       </aside>
 
       {/* Main content */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} min-w-0`}>
         <DashboardNavbar userType={userType} onToggleSidebar={() => setIsOpen(!isOpen)} />
 
-        <main className="flex-1 p-4 lg:p-6 xl:p-8 space-y-6 pt-20 lg:pt-4">
-          {children}
+        <main className="flex-1 p-4 lg:p-6 xl:p-8 pt-4 overflow-x-hidden">
+          <div className="w-full max-w-7xl mx-auto">
+            {children}
+          </div>
         </main>
       </div>
     </div>

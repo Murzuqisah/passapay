@@ -102,8 +102,8 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md" onClick={onComplete}>
-      <div className="bg-background border border-border rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onClick={onComplete}>
+      <div className="bg-card border-2 border-border rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="text-center p-8 pb-6 border-b border-border">
           <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -139,31 +139,35 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
                   className={`p-6 rounded-lg border-2 transition-all hover:border-primary/50 ${data.userType === 'artist'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:bg-accent/50'
+                      ? 'border-primary bg-primary/20 shadow-lg shadow-primary/20'
+                      : 'border-border bg-background hover:bg-accent/50'
                     }`}
                   onClick={() => setData({ ...data, userType: 'artist' })}
                 >
                   <div className="text-center space-y-3">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${
+                      data.userType === 'artist' ? 'bg-primary/30' : 'bg-primary/10'
+                    }`}>
                       <span className="icon-[mdi--music] text-2xl text-primary" />
                     </div>
-                    <h4 className="font-semibold text-card-foreground">Artist</h4>
+                    <h4 className="font-semibold text-foreground">Artist</h4>
                     <p className="text-sm text-muted-foreground">Receive payments for performances</p>
                   </div>
                 </button>
                 <button
                   className={`p-6 rounded-lg border-2 transition-all hover:border-primary/50 ${data.userType === 'promoter'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:bg-accent/50'
+                      ? 'border-primary bg-primary/20 shadow-lg shadow-primary/20'
+                      : 'border-border bg-background hover:bg-accent/50'
                     }`}
                   onClick={() => setData({ ...data, userType: 'promoter' })}
                 >
                   <div className="text-center space-y-3">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${
+                      data.userType === 'promoter' ? 'bg-primary/30' : 'bg-primary/10'
+                    }`}>
                       <span className="icon-[mdi--briefcase] text-2xl text-primary" />
                     </div>
-                    <h4 className="font-semibold text-card-foreground">Promoter</h4>
+                    <h4 className="font-semibold text-foreground">Promoter</h4>
                     <p className="text-sm text-muted-foreground">Send payments to artists</p>
                   </div>
                 </button>
@@ -201,11 +205,11 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
                 <div>
                   <label className="block text-sm font-medium text-card-foreground mb-2">Country *</label>
                   <select
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent [&>option]:bg-background [&>option]:text-foreground"
                     value={data.country}
                     onChange={(e) => setData({ ...data, country: e.target.value })}
                   >
-                    <option value="">Select country</option>
+                    <option value="" className="text-muted-foreground">Select country</option>
                     <option value="KE">Kenya</option>
                     <option value="NG">Nigeria</option>
                     <option value="GH">Ghana</option>
@@ -229,11 +233,11 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
                   <div>
                     <label className="block text-sm font-medium text-card-foreground mb-2">Genre *</label>
                     <select
-                      className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent [&>option]:bg-background [&>option]:text-foreground"
                       value={data.genre}
                       onChange={(e) => setData({ ...data, genre: e.target.value })}
                     >
-                      <option value="">Select genre</option>
+                      <option value="" className="text-muted-foreground">Select genre</option>
                       <option value="afrobeats">Afrobeats</option>
                       <option value="hip-hop">Hip Hop</option>
                       <option value="reggae">Reggae</option>
