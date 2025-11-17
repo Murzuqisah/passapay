@@ -211,7 +211,7 @@ export function useContractPayment() {
       let workingProvider = provider
       try {
         await provider.getNetwork()
-      } catch (networkError) {
+      } catch {
         console.warn('MetaMask provider failed, trying fallback RPC')
         const rpcUrls = getAllRpcUrls('moonbaseAlpha')
         for (const rpcUrl of rpcUrls) {
@@ -220,8 +220,8 @@ export function useContractPayment() {
             await fallbackProvider.getNetwork()
             workingProvider = fallbackProvider
             break
-          } catch (rpcError) {
-            console.warn(`RPC ${rpcUrl} failed:`, rpcError)
+          } catch {
+            console.warn(`RPC ${rpcUrl} failed`)
           }
         }
       }
@@ -241,13 +241,15 @@ export function useContractPayment() {
           const fee = (grossAmountWei * feePercentage) / BigInt(10000)
           const netAmount = grossAmountWei - fee
           
-          return formatEther(netAmount)
+    return formatEther(netAmount)
         } catch (callError) {
           retries--
           if (retries === 0) throw callError
-          await new Promise(resolve => setTimeout(resolve, 1000))
+          await new Promise<void>(resolve => setTimeout(resolve, 1000))
         }
       }
+      
+      throw new Error('Failed to calculate net amount after retries')
 
     } catch (error: unknown) {
       console.error('Error calculating net amount:', error)
