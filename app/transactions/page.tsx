@@ -5,11 +5,12 @@ import { Navbar, Footer } from '../components'
 import { TransactionList } from '../components/transactions/TransactionList'
 import { TransactionFilters } from '../components/transactions/TransactionFilters'
 import { useConnect } from '../hooks/use-connect'
+import type { Transaction } from '../types/transaction'
 
 export default function TransactionsPage() {
   const { selectedAccount } = useConnect()
-  const [transactions, setTransactions] = useState([])
-  const [filteredTransactions, setFilteredTransactions] = useState([])
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -24,11 +25,17 @@ export default function TransactionsPage() {
       try {
         const response = await fetch(`/api/transactions?address=${selectedAccount.address}`)
         const data = await response.json()
-        setTransactions(data)
-        setFilteredTransactions(data)
-        setTotalPages(Math.ceil(data.length / itemsPerPage))
-      } catch (error) {
-        console.error('Error fetching transactions:', error)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const typedData: Transaction[] = Array.isArray(data) ? data.map((tx: any) => ({
+          ...tx,
+          status: (tx.status || 'pending') as 'pending' | 'completed' | 'failed',
+          timestamp: new Date(tx.timestamp || tx.createdAt || Date.now())
+        })) : []
+        setTransactions(typedData)
+        setFilteredTransactions(typedData)
+        setTotalPages(Math.ceil(typedData.length / itemsPerPage))
+      } catch {
+        // Error fetching transactions
       } finally {
         setLoading(false)
       }

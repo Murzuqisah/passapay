@@ -1,15 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-
-interface Transaction {
-  txHash: string
-  fromAddress: string
-  toAddress: string
-  amount: string
-  status: 'pending' | 'completed' | 'failed'
-  timestamp: Date
-}
+import type { Transaction } from '../../types/transaction'
 
 interface TransactionCardProps {
   transaction: Transaction

@@ -51,7 +51,8 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
 export function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
-  _address = '',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  address = '',
   signer: PolkadotSigner,
   callbacks: {
     onTxHash: (hash: string) => void

@@ -1,15 +1,7 @@
 'use client'
 
 import { TransactionCard } from './TransactionCard'
-
-interface Transaction {
-  txHash: string
-  fromAddress: string
-  toAddress: string
-  amount: string
-  status: 'pending' | 'completed' | 'failed'
-  timestamp: Date
-}
+import type { Transaction } from '../../types/transaction'
 
 interface TransactionListProps {
   transactions: Transaction[]
