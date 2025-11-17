@@ -201,9 +201,13 @@ export default function PromoterDashboard() {
         {activeView === 'overview' && (
           <div className="space-y-4 sm:space-y-6 animate-in">
             {/* Balance and Quick Actions */}
-            <div className="grid grid-cols-1 gap-4 sm:gap-6">
-              <BalanceOverview balance={balance} stats={stats} />
-              <ContractPayment />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2">
+                <BalanceOverview balance={balance} stats={stats} />
+              </div>
+              <div className="lg:col-span-1">
+                <ContractPayment />
+              </div>
             </div>
 
             {/* Recent Payments */}
