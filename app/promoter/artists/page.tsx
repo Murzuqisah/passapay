@@ -27,7 +27,7 @@ export default function ArtistsPage() {
           const data = await res.json()
           setArtists(data)
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch artists
       } finally {
         setLoading(false)

@@ -36,7 +36,7 @@ export default function ArtistTransactionsPage() {
           const data = await res.json()
           setTransactions(Array.isArray(data) ? data : [])
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch transactions
       } finally {
         setLoading(false)

@@ -63,7 +63,7 @@ export default function PromoterDashboard() {
           showError('This dashboard is only for promoters')
           setTimeout(() => router.push('/'), 2000)
         }
-      } catch (error) {
+      } catch {
         showError('Unable to verify your access')
         setTimeout(() => router.push('/'), 2000)
       }
@@ -92,7 +92,7 @@ export default function PromoterDashboard() {
             })
           }
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch balance
       }
     }
@@ -142,7 +142,7 @@ export default function PromoterDashboard() {
             artistsPaid: uniqueArtists.size
           })
         }
-      } catch (error) {
+      } catch {
         setRecentPayments([])
         setPaymentHistory([])
         setStats({ totalPayments: 0, totalSent: '$0', artistsPaid: 0 })

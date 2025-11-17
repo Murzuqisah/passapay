@@ -45,7 +45,7 @@ export default function HistoryPage() {
           }))
           setPayments(formatted)
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch payments
       } finally {
         setLoading(false)

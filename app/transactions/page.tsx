@@ -37,7 +37,7 @@ export default function TransactionsPage() {
     fetchTransactions()
   }, [selectedAccount])
 
-  const handleFilter = (filtered: any[]) => {
+  const handleFilter = (filtered: Transaction[]) => {
     setFilteredTransactions(filtered)
     setTotalPages(Math.ceil(filtered.length / itemsPerPage))
     setCurrentPage(1)

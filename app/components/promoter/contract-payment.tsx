@@ -52,7 +52,7 @@ export default function ContractPayment() {
           setArtists(data)
           setShowDropdown(true)
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch artists
       } finally {
         setLoading(false)
@@ -75,7 +75,7 @@ export default function ContractPayment() {
     try {
       const net = await calculateNetAmount(amount)
       setNetAmount(net)
-    } catch (error) {
+    } catch {
       // Fee calculation failed
     }
   }
@@ -90,7 +90,7 @@ export default function ContractPayment() {
       setArtistName('')
       setAmount('')
       setNetAmount('')
-    } catch (error) {
+    } catch {
       // Payment creation failed
     }
   }

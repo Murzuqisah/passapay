@@ -33,7 +33,7 @@ export default function ClaimPayments() {
         const data = await res.json()
         setPendingPayments(data)
       }
-    } catch (error) {
+    } catch {
       // Failed to fetch pending payments
     } finally {
       setLoading(false)
@@ -44,7 +44,7 @@ export default function ClaimPayments() {
     try {
       await completePayment(paymentId)
       setTimeout(fetchPendingPayments, 2000)
-    } catch (error) {
+    } catch {
       // Failed to claim payment
     }
   }

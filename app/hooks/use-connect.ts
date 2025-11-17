@@ -81,7 +81,7 @@ export function useConnect() {
 
       isConnecting.set(null)
     }
-    catch (err) {
+    catch {
       isConnecting.set(null)
       connectedWallet.set(null)
       removeStorage(storageWallet)

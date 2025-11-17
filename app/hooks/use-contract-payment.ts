@@ -59,7 +59,7 @@ export function useContractPayment() {
       // Save to database
       if (paymentIdValue) {
         try {
-          const response = await fetch('/api/transactions', {
+          await fetch('/api/transactions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -75,7 +75,7 @@ export function useContractPayment() {
               blockNumber: receipt.blockNumber
             })
           })
-        } catch (dbError) {
+        } catch {
           // Silently fail - transaction is still on blockchain
         }
       }
@@ -122,7 +122,7 @@ export function useContractPayment() {
             status: 'completed'
           })
         })
-      } catch (dbError) {
+      } catch {
         // Failed to update database
       }
       

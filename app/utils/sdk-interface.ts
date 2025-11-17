@@ -51,7 +51,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
 export function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
-  address = '',
+  _address = '',
   signer: PolkadotSigner,
   callbacks: {
     onTxHash: (hash: string) => void

@@ -45,7 +45,7 @@ export default function TransactionsPage() {
           }))
           setTransactions(formatted)
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch transactions
       } finally {
         setLoading(false)

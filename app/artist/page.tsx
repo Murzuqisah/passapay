@@ -81,7 +81,7 @@ export default function ArtistDashboard() {
             setBalance(parseFloat(formatEther(bal)).toFixed(4))
           }
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch balance
       }
     }
@@ -113,7 +113,7 @@ export default function ArtistDashboard() {
           
           setStats({ pending, completed, total: total.toFixed(2) })
         }
-      } catch (error) {
+      } catch {
         setTransactions([])
         setStats({ pending: 0, completed: 0, total: '0.00' })
       }

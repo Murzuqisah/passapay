@@ -25,7 +25,7 @@ export default function ProfilePage() {
           const data = await res.json()
           setProfile({ name: data.name || '', genre: data.genre || '', country: data.country || '' })
         }
-      } catch (error) {
+      } catch {
         // Failed to fetch profile
       } finally {
         setLoading(false)
@@ -52,7 +52,7 @@ export default function ProfilePage() {
       } else {
         alert('Failed to update profile')
       }
-    } catch (error) {
+    } catch {
       alert('Failed to update profile')
     } finally {
       setSaving(false)
