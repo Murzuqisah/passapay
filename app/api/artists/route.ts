@@ -3,31 +3,35 @@ import { connectDB, User } from '@/app/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const search = searchParams.get('search') || ''
-
-    const dbConnection = await connectDB()
+    await connectDB()
     
-    if (dbConnection) {
-      const query: Record<string, unknown> = { userType: 'artist' }
-      
-      if (search) {
-        query.$or = [
+    const { searchParams } = new URL(request.url)
+    const search = searchParams.get('search')
+    
+    let query: Record<string, unknown> = { userType: 'artist' }
+    
+    if (search) {
+      query = {
+        userType: 'artist',
+        $or: [
           { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } }
+          { email: { $regex: search, $options: 'i' } },
+          { walletAddress: { $regex: search, $options: 'i' } }
         ]
       }
-
-      const artists = await User.find(query)
-        .select('name walletAddress email genre country')
-        .limit(50)
-
-      return NextResponse.json(artists, { status: 200 })
-    } else {
-      return NextResponse.json([], { status: 200 })
     }
+    
+    const artists = await User.find(query)
+      .select('name email walletAddress country userType createdAt')
+      .sort({ createdAt: -1 })
+      .limit(100)
+    
+    return NextResponse.json(artists)
   } catch (error) {
     console.error('Error fetching artists:', error)
-    return NextResponse.json({ error: 'Failed to fetch artists' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to fetch artists' },
+      { status: 500 }
+    )
   }
 }
