@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix .",
-    "postinstall": "papi"
+    "postinstall": "papi",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",
