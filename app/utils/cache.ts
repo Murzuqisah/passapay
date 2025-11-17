@@ -1,6 +1,6 @@
-const cache = new Map<string, { data: any; timestamp: number; ttl: number }>()
+const cache = new Map<string, { data: unknown; timestamp: number; ttl: number }>()
 
-export const setCache = (key: string, data: any, ttlMs = 300000) => {
+export const setCache = (key: string, data: unknown, ttlMs = 300000) => {
   cache.set(key, { data, timestamp: Date.now(), ttl: ttlMs })
 }
 

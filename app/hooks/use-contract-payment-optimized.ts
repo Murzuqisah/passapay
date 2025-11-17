@@ -5,14 +5,7 @@ import { BrowserProvider, Contract, parseEther, formatEther, JsonRpcProvider } f
 import PassaPaymentABI from '../contracts/PassaPayment.json'
 import { ACTIVE_NETWORK, getAllRpcUrls } from '../utils/contract-config'
 
-interface PaymentDetails {
-  from: string
-  to: string
-  amount: string
-  createdAt: number
-  deadline: number
-  status: number
-}
+
 
 export function useContractPayment() {
   const [isProcessing, setIsProcessing] = useState(false)
