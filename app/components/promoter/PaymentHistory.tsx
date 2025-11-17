@@ -63,16 +63,16 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
     .reduce((sum, p) => sum + parseFloat(p.amount.replace(/,/g, '')), 0)
 
   return (
-    <div className="section-glass rounded-2xl p-6 md:p-8 border-2 border-border/50 relative overflow-hidden">
+    <div className="section-glass rounded-xl p-4 sm:p-6 border-2 border-border/50 relative overflow-hidden">
       {/* Decorative gradient */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl opacity-50" />
+      <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl opacity-50 hidden sm:block" />
       
       {/* Header */}
-      <div className="mb-6 relative z-10">
-        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
+      <div className="mb-4 sm:mb-6 relative z-10">
+        <h2 className="text-lg sm:text-xl font-bold text-foreground mb-2">
           Payment History
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           Complete record of all your transactions
         </p>
       </div>

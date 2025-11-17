@@ -51,25 +51,25 @@ export function RecentPayments({ payments, onViewAll }: RecentPaymentsProps) {
   }
 
   return (
-    <div className="section-glass rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border-2 border-border/50 relative overflow-hidden">
+    <div className="section-glass rounded-xl p-4 sm:p-6 border-2 border-border/50 relative overflow-hidden">
       {/* Decorative gradient */}
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-50 hidden sm:block" />
       
-      <div className="flex items-center justify-between mb-4 sm:mb-6 relative z-10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6 relative z-10">
         <div>
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">
+          <h2 className="text-lg sm:text-xl font-bold text-foreground">
             Recent Payments
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
             Your latest transactions
           </p>
         </div>
         <button 
           onClick={onViewAll}
-          className="text-primary hover:text-primary/80 font-bold text-xs sm:text-sm flex items-center gap-1 transition-colors duration-200 flex-shrink-0 whitespace-nowrap"
+          className="text-primary hover:text-primary/80 font-bold text-xs sm:text-sm flex items-center gap-1 transition-colors duration-200 self-start sm:self-auto"
         >
           <span>View All</span>
-          <span className="icon-[mdi--arrow-right] text-base sm:text-lg" />
+          <span className="icon-[mdi--arrow-right] text-base" />
         </button>
       </div>
 

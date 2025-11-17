@@ -104,42 +104,40 @@ export default function ContractPayment() {
 
   if (!account) {
     return (
-      <div className="card bg-card border border-border">
-        <div className="card-body text-center">
-          <p className="text-muted-foreground">Connect MetaMask to send payments</p>
-        </div>
+      <div className="glass-card p-6 rounded-xl text-center">
+        <p className="text-muted-foreground">Connect MetaMask to send payments</p>
       </div>
     )
   }
 
   return (
-    <div className="card bg-card border border-border">
-      <div className="card-body">
-        <h2 className="text-2xl font-bold mb-6">Send Payment via Smart Contract</h2>
+    <>
+      <div className="glass-card p-4 sm:p-6 rounded-xl">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Send Payment via Smart Contract</h2>
 
         <div className="space-y-4">
           <div className="relative" ref={dropdownRef}>
-            <label className="block text-sm font-medium mb-2">Search Artist by Name</label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Search Artist by Name</label>
             <div className="relative">
-              <span className="icon-[mdi--magnify] absolute left-3 top-1/2 -translate-y-1/2 text-lg text-muted-foreground" />
+              <span className="icon-[mdi--magnify] absolute left-3 top-1/2 -translate-y-1/2 text-base sm:text-lg text-muted-foreground" />
               <input
                 type="text"
-                className="w-full pl-10 pr-3 py-2 border border-border rounded-lg bg-background"
+                className="w-full pl-10 pr-3 py-2 sm:py-3 border border-border rounded-lg bg-background text-foreground text-sm sm:text-base"
                 placeholder="Search artist name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             {showDropdown && artists.length > 0 && (
-              <div className="absolute z-10 w-full mt-1 bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-10 w-full mt-1 bg-card border-2 border-border rounded-lg shadow-xl max-h-60 overflow-y-auto backdrop-blur-sm">
                 {artists.map((artist) => (
                   <button
                     key={artist._id}
                     type="button"
                     onClick={() => selectArtist(artist)}
-                    className="w-full px-4 py-3 text-left hover:bg-muted transition-colors border-b border-border last:border-0"
+                    className="w-full px-4 py-3 text-left hover:bg-primary/10 hover:border-primary/30 transition-all border-b border-border last:border-0"
                   >
-                    <p className="font-semibold">{artist.name}</p>
+                    <p className="font-semibold text-foreground">{artist.name}</p>
                     <p className="text-xs text-muted-foreground font-mono">{artist.walletAddress}</p>
                     {artist.genre && <p className="text-xs text-muted-foreground">{artist.genre}</p>}
                   </button>
@@ -154,10 +152,10 @@ export default function ContractPayment() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Artist Wallet Address</label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Artist Wallet Address</label>
             <input
               type="text"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background"
+              className="w-full px-3 py-2 sm:py-3 border border-border rounded-lg bg-background text-foreground text-sm sm:text-base"
               placeholder="0x... or select artist above"
               value={artistAddress}
               onChange={(e) => {
@@ -171,11 +169,11 @@ export default function ContractPayment() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Amount (DEV)</label>
+            <label className="block text-sm font-medium mb-2 text-foreground">Amount (DEV)</label>
             <input
               type="number"
               step="0.01"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background"
+              className="w-full px-3 py-2 sm:py-3 border border-border rounded-lg bg-background text-foreground text-sm sm:text-base"
               placeholder="0.00"
               value={amount}
               onChange={(e) => {
@@ -209,7 +207,7 @@ export default function ContractPayment() {
           )}
 
           <button
-            className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50"
+            className="w-full px-4 py-2 sm:py-3 bg-primary text-primary-foreground rounded-lg font-medium sm:font-bold hover:bg-primary/90 disabled:opacity-50 text-sm sm:text-base"
             onClick={handleShowConfirm}
             disabled={!artistAddress || !amount || isProcessing}
           >
@@ -264,6 +262,6 @@ export default function ContractPayment() {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
