@@ -76,7 +76,7 @@ export default function ContractPayment() {
       const net = await calculateNetAmount(amount)
       setNetAmount(net)
     } catch (error) {
-      console.error('Fee calculation failed:', error)
+      // Fee calculation failed
     }
   }
 
@@ -91,7 +91,7 @@ export default function ContractPayment() {
       setAmount('')
       setNetAmount('')
     } catch (error) {
-      console.error('Payment creation failed:', error)
+      // Payment creation failed
     }
   }
 
