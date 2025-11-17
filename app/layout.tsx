@@ -10,11 +10,15 @@ import { ToastContainer } from "./components/toast/toast-container";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -48,11 +52,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
-        <Script
-          src="https://consent.cookiefirst.com/consent.js"
-          data-cookiefirst-key={process.env.NEXT_PUBLIC_C15T_URL}
-          strategy="afterInteractive"
-        />
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            src="https://consent.cookiefirst.com/consent.js"
+            data-cookiefirst-key={process.env.NEXT_PUBLIC_C15T_URL}
+            strategy="afterInteractive"
+            onError={() => console.warn('Cookie consent script blocked by ad blocker')}
+          />
+        )}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
