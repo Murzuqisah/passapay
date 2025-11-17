@@ -86,13 +86,13 @@ export default function DashboardSidebar({ userType, children }: SidebarProps) {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-full glass border-r border-sidebar-border z-40 transform transition-all duration-300 ease-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+      <aside className={`fixed left-0 top-0 h-full glass border-r border-sidebar-border z-50 transform transition-all duration-300 ease-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
         } ${isCollapsed ? 'w-20' : 'w-64'}`}>
 
         {/* Header */}
