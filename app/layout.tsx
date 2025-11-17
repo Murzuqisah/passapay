@@ -57,7 +57,6 @@ export default function RootLayout({
             src="https://consent.cookiefirst.com/consent.js"
             data-cookiefirst-key={process.env.NEXT_PUBLIC_C15T_URL}
             strategy="afterInteractive"
-            onError={() => console.warn('Cookie consent script blocked by ad blocker')}
           />
         )}
         <ThemeProvider
