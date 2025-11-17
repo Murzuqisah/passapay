@@ -208,29 +208,39 @@ export function useContractPayment() {
       const provider = new BrowserProvider(window.ethereum)
       
       // Try fallback providers if MetaMask fails
-      let workingProvider = provider
+      let contract: Contract
       try {
         await provider.getNetwork()
+        contract = new Contract(
+          ACTIVE_NETWORK.contractAddress,
+          PassaPaymentABI.abi,
+          provider
+        )
       } catch {
         console.warn('MetaMask provider failed, trying fallback RPC')
         const rpcUrls = getAllRpcUrls('moonbaseAlpha')
+        let fallbackContract: Contract | null = null
+        
         for (const rpcUrl of rpcUrls) {
           try {
             const fallbackProvider = new JsonRpcProvider(rpcUrl)
             await fallbackProvider.getNetwork()
-            workingProvider = fallbackProvider
+            fallbackContract = new Contract(
+              ACTIVE_NETWORK.contractAddress,
+              PassaPaymentABI.abi,
+              fallbackProvider
+            )
             break
           } catch {
             console.warn(`RPC ${rpcUrl} failed`)
           }
         }
+        
+        if (!fallbackContract) {
+          throw new Error('All RPC endpoints failed')
+        }
+        contract = fallbackContract
       }
-      
-      const contract = new Contract(
-        ACTIVE_NETWORK.contractAddress,
-        PassaPaymentABI.abi,
-        workingProvider
-      )
 
       // Add retry logic for contract calls
       let retries = 3
