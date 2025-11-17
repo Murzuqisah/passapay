@@ -39,6 +39,8 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-6">
               <NavLink href="/">Home</NavLink>
+              <NavLink href="/promoter/dashboard">Dashboard</NavLink>
+              <NavLink href="/transactions">Transactions</NavLink>
               <NavLink 
                 href="/creative-tools" 
                 hasDropdown 
@@ -50,7 +52,6 @@ export default function Navbar() {
               >
                 Creative Tools
               </NavLink>
-              <NavLink href="/#how-it-works">How It Works</NavLink>
               <NavLink href="/support">Support</NavLink>
             </div>
             
