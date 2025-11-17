@@ -57,7 +57,7 @@ export default function HistoryPage() {
 
   return (
     <DashboardSidebar userType="promoter">
-      <div className="max-w-6xl">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold gradient-text mb-2">Payment History</h1>
           <p className="text-muted-foreground">Complete record of all payments sent</p>
