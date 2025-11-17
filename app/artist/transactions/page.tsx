@@ -37,7 +37,7 @@ export default function ArtistTransactionsPage() {
           setTransactions(Array.isArray(data) ? data : [])
         }
       } catch (error) {
-        console.error('Failed to fetch transactions:', error)
+        // Failed to fetch transactions
       } finally {
         setLoading(false)
       }

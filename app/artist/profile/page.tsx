@@ -43,7 +43,7 @@ export default function ArtistProfilePage() {
           }
         }
       } catch (error) {
-        console.error('Failed to fetch profile:', error)
+        // Failed to fetch profile
       } finally {
         setLoading(false)
       }
@@ -79,7 +79,6 @@ export default function ArtistProfilePage() {
         setMessage('Failed to update profile')
       }
     } catch (error) {
-      console.error('Failed to save profile:', error)
       setMessage('Failed to update profile')
     } finally {
       setSaving(false)

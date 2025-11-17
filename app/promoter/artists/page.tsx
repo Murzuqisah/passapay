@@ -28,7 +28,7 @@ export default function ArtistsPage() {
           setArtists(data)
         }
       } catch (error) {
-        console.error('Failed to fetch artists:', error)
+        // Failed to fetch artists
       } finally {
         setLoading(false)
       }

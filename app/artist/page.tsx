@@ -82,7 +82,7 @@ export default function ArtistDashboard() {
           }
         }
       } catch (error) {
-        console.error('Failed to fetch balance:', error)
+        // Failed to fetch balance
       }
     }
 
@@ -114,7 +114,6 @@ export default function ArtistDashboard() {
           setStats({ pending, completed, total: total.toFixed(2) })
         }
       } catch (error) {
-        console.error('Failed to fetch transactions:', error)
         setTransactions([])
         setStats({ pending: 0, completed: 0, total: '0.00' })
       }

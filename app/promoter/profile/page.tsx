@@ -26,7 +26,7 @@ export default function ProfilePage() {
           setProfile({ name: data.name || '', genre: data.genre || '', country: data.country || '' })
         }
       } catch (error) {
-        console.error('Failed to fetch profile:', error)
+        // Failed to fetch profile
       } finally {
         setLoading(false)
       }
@@ -53,7 +53,6 @@ export default function ProfilePage() {
         alert('Failed to update profile')
       }
     } catch (error) {
-      console.error('Failed to save profile:', error)
       alert('Failed to update profile')
     } finally {
       setSaving(false)

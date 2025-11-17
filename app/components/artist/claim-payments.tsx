@@ -34,7 +34,7 @@ export default function ClaimPayments() {
         setPendingPayments(data)
       }
     } catch (error) {
-      console.error('Failed to fetch pending payments:', error)
+      // Failed to fetch pending payments
     } finally {
       setLoading(false)
     }
@@ -45,7 +45,7 @@ export default function ClaimPayments() {
       await completePayment(paymentId)
       setTimeout(fetchPendingPayments, 2000)
     } catch (error) {
-      console.error('Failed to claim payment:', error)
+      // Failed to claim payment
     }
   }
 

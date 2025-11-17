@@ -93,7 +93,6 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
           router.push(data.user?.userType === 'artist' ? '/artist' : '/promoter/dashboard')
         }
       } catch {
-        console.error('Error checking user')
         setShowOnboarding(true)
       }
     }

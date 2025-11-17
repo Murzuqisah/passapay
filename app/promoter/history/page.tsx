@@ -46,7 +46,7 @@ export default function HistoryPage() {
           setPayments(formatted)
         }
       } catch (error) {
-        console.error('Failed to fetch payments:', error)
+        // Failed to fetch payments
       } finally {
         setLoading(false)
       }

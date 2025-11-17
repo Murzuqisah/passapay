@@ -64,7 +64,6 @@ export default function PromoterDashboard() {
           setTimeout(() => router.push('/'), 2000)
         }
       } catch (error) {
-        console.error('Error checking user access:', error)
         showError('Unable to verify your access')
         setTimeout(() => router.push('/'), 2000)
       }
@@ -77,17 +76,14 @@ export default function PromoterDashboard() {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      console.log(metamask.account)
       if (!metamask.account ) return
       
       try {
         if (window.ethereum) {
           const provider = new BrowserProvider(window.ethereum)
           const address = metamask.account?.address
-          console.log(address)
           if (address) {
             const bal = await provider.getBalance(address)
-            console.log(bal)
             const devBalance = parseFloat(formatEther(bal)).toFixed(2)
             setBalance({
               usdc: '0.00',
@@ -97,7 +93,7 @@ export default function PromoterDashboard() {
           }
         }
       } catch (error) {
-        console.error('Failed to fetch balance:', error)
+        // Failed to fetch balance
       }
     }
 
@@ -106,8 +102,6 @@ export default function PromoterDashboard() {
       
       try {
         const address = metamask.account?.address || selectedAccount?.address
-        console.log('Fetching transactions for address:', address)
-        
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 8000)
         
@@ -119,9 +113,7 @@ export default function PromoterDashboard() {
         
         if (response.ok) {
           const data = await response.json()
-          console.log('Transactions response:', data)
           const txArray = Array.isArray(data) ? data : []
-          console.log('Transaction count:', txArray.length)
           const formatted = txArray.map((tx: Record<string, unknown>) => ({
             id: String(tx._id || tx.txHash || ''),
             recipient: String(tx.toAddress || ''),
@@ -151,7 +143,6 @@ export default function PromoterDashboard() {
           })
         }
       } catch (error) {
-        console.error('Failed to fetch transactions:', error)
         setRecentPayments([])
         setPaymentHistory([])
         setStats({ totalPayments: 0, totalSent: '$0', artistsPaid: 0 })

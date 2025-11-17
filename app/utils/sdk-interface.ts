@@ -77,7 +77,6 @@ export function createRemarkTransaction(
     },
     error: (err) => {
       unsub.unsubscribe()
-      console.error(err, address)
       callbacks.onError(err.message || 'Unknown error')
     },
   })
@@ -118,7 +117,6 @@ export function createUSDCTransfer(
     },
     error: (err) => {
       unsub.unsubscribe()
-      console.error(err)
       callbacks.onError(err.message || 'Unknown error')
     },
   })

@@ -46,7 +46,7 @@ export default function TransactionsPage() {
           setTransactions(formatted)
         }
       } catch (error) {
-        console.error('Failed to fetch transactions:', error)
+        // Failed to fetch transactions
       } finally {
         setLoading(false)
       }
