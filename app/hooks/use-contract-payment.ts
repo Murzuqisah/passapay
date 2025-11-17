@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { BrowserProvider, Contract, parseEther, formatEther } from 'ethers'
+import { BrowserProvider, Contract, parseEther, formatEther, JsonRpcProvider } from 'ethers'
 import PassaPaymentABI from '../contracts/PassaPayment.json'
-import { ACTIVE_NETWORK } from '../utils/contract-config'
+import { ACTIVE_NETWORK, getAllRpcUrls } from '../utils/contract-config'
 
 interface PaymentDetails {
   from: string
@@ -206,18 +206,48 @@ export function useContractPayment() {
       if (!window.ethereum) throw new Error('MetaMask not installed')
 
       const provider = new BrowserProvider(window.ethereum)
+      
+      // Try fallback providers if MetaMask fails
+      let workingProvider = provider
+      try {
+        await provider.getNetwork()
+      } catch (networkError) {
+        console.warn('MetaMask provider failed, trying fallback RPC')
+        const rpcUrls = getAllRpcUrls('moonbaseAlpha')
+        for (const rpcUrl of rpcUrls) {
+          try {
+            const fallbackProvider = new JsonRpcProvider(rpcUrl)
+            await fallbackProvider.getNetwork()
+            workingProvider = fallbackProvider
+            break
+          } catch (rpcError) {
+            console.warn(`RPC ${rpcUrl} failed:`, rpcError)
+          }
+        }
+      }
+      
       const contract = new Contract(
         ACTIVE_NETWORK.contractAddress,
         PassaPaymentABI.abi,
-        provider
+        workingProvider
       )
 
-      const feePercentage = await contract.platformFeePercentage()
-      const grossAmountWei = parseEther(grossAmount)
-      const fee = (grossAmountWei * feePercentage) / BigInt(10000)
-      const netAmount = grossAmountWei - fee
-      
-      return formatEther(netAmount)
+      // Add retry logic for contract calls
+      let retries = 3
+      while (retries > 0) {
+        try {
+          const feePercentage = await contract.platformFeePercentage()
+          const grossAmountWei = parseEther(grossAmount)
+          const fee = (grossAmountWei * feePercentage) / BigInt(10000)
+          const netAmount = grossAmountWei - fee
+          
+          return formatEther(netAmount)
+        } catch (callError) {
+          retries--
+          if (retries === 0) throw callError
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+      }
 
     } catch (error: unknown) {
       console.error('Error calculating net amount:', error)

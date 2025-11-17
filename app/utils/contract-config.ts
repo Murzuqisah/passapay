@@ -4,7 +4,11 @@ export const CONTRACT_CONFIG = {
   moonbaseAlpha: {
     contractAddress: '0x42e08b134c98a0c2adb443d7481c52d2b97e1e72', // Deployed contract
     chainId: 1287,
-    rpcUrl: 'https://rpc.api.moonbase.moonbeam.network',
+    rpcUrls: [
+      'https://rpc.api.moonbase.moonbeam.network',
+      'https://moonbase-alpha.public.blastapi.io',
+      'https://moonbase.unitedbloc.com:2000'
+    ],
     explorerUrl: 'https://moonbase.moonscan.io',
     nativeCurrency: {
       name: 'DEV',
@@ -16,7 +20,11 @@ export const CONTRACT_CONFIG = {
   moonbeam: {
     contractAddress: '0x0000000000000000000000000000000000000000', // UPDATE AFTER DEPLOYMENT
     chainId: 1284,
-    rpcUrl: 'https://rpc.api.moonbeam.network',
+    rpcUrls: [
+      'https://rpc.api.moonbeam.network',
+      'https://moonbeam.public.blastapi.io',
+      'https://moonbeam.unitedbloc.com'
+    ],
     explorerUrl: 'https://moonscan.io',
     nativeCurrency: {
       name: 'GLMR',
@@ -27,4 +35,18 @@ export const CONTRACT_CONFIG = {
 }
 
 // Default to testnet
-export const ACTIVE_NETWORK = CONTRACT_CONFIG.moonbaseAlpha
+export const ACTIVE_NETWORK = {
+  ...CONTRACT_CONFIG.moonbaseAlpha,
+  rpcUrl: CONTRACT_CONFIG.moonbaseAlpha.rpcUrls[0] // Keep backward compatibility
+}
+
+// RPC fallback helper
+export const getRpcUrl = (networkKey: keyof typeof CONTRACT_CONFIG = 'moonbaseAlpha') => {
+  const network = CONTRACT_CONFIG[networkKey]
+  return network.rpcUrls[0]
+}
+
+// Get all RPC URLs for a network
+export const getAllRpcUrls = (networkKey: keyof typeof CONTRACT_CONFIG = 'moonbaseAlpha') => {
+  return CONTRACT_CONFIG[networkKey].rpcUrls
+}

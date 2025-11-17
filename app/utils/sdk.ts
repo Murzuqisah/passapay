@@ -8,19 +8,32 @@ import { dot, dot_asset_hub, pas, pas_asset_hub } from '../descriptors'
 const config = {
   dot: {
     descriptor: dot,
-    providers: ['wss://dot-rpc.stakeworld.io'],
+    providers: [
+      'wss://rpc.polkadot.io',
+      'wss://polkadot-rpc.dwellir.com',
+      'wss://dot-rpc.stakeworld.io'
+    ],
   },
   dot_asset_hub: {
     descriptor: dot_asset_hub,
-    providers: ['wss://dot-rpc.stakeworld.io/assethub'],
+    providers: [
+      'wss://polkadot-asset-hub-rpc.polkadot.io',
+      'wss://dot-rpc.stakeworld.io/assethub'
+    ],
   },
   pas: {
     descriptor: pas,
-    providers: ['wss://pas-rpc.stakeworld.io'],
+    providers: [
+      'wss://rpc.ibp.network/paseo',
+      'wss://pas-rpc.stakeworld.io'
+    ],
   },
   pas_asset_hub: {
     descriptor: pas_asset_hub,
-    providers: ['wss://pas-rpc.stakeworld.io/assethub'],
+    providers: [
+      'wss://paseo-asset-hub-rpc.polkadot.io',
+      'wss://pas-rpc.stakeworld.io/assethub'
+    ],
   },
 } as const
 
@@ -33,10 +46,9 @@ export default function sdk<T extends Prefix>(chain: T) {
   const clients = clientStore.get()
 
   if (!clients[chain]) {
+    const providers = config[chain].providers.map(url => getWsProvider(url))
     clients[chain] = createClient(
-      withPolkadotSdkCompat(
-        getWsProvider(config[chain].providers[0]),
-      ),
+      withPolkadotSdkCompat(providers[0]),
     )
   }
 
