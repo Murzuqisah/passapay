@@ -103,7 +103,11 @@ export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onClick={onComplete}>
-      <div className="bg-card border-2 border-border rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <div 
+        className="absolute inset-0"
+        onClick={onComplete}
+      />
+      <div className="relative bg-card border-2 border-border rounded-xl shadow-2xl w-[95vw] sm:w-[600px] lg:w-[700px] max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="text-center p-8 pb-6 border-b border-border">
           <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
