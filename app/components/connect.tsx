@@ -259,16 +259,16 @@ export default function Connect({ showText = true, onWalletConnected }: ConnectP
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xl">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-xl"
+            className="absolute inset-0"
             onClick={closeModal}
           />
 
           {/* Modal Content */}
           <div
-            className="relative bg-background border border-border rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            className="relative bg-background border-2 border-border rounded-xl shadow-2xl w-[95vw] sm:w-[600px] lg:w-[700px] max-h-[85vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
