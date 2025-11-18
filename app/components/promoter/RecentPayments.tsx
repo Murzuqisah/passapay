@@ -84,10 +84,7 @@ export function RecentPayments({ payments, onViewAll }: RecentPaymentsProps) {
               {/* Left: Recipient Info */}
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-foreground text-sm sm:text-base truncate">
-                  {payment.recipient}
-                </p>
-                <p className="text-xs text-muted-foreground font-mono truncate">
-                  {payment.walletAddress.slice(0, 6)}...{payment.walletAddress.slice(-4)}
+                  To: {payment.walletAddress.slice(0, 6)}...{payment.walletAddress.slice(-4)}
                 </p>
                 <div className="flex items-center gap-1 mt-0.5">
                   <span className={`${getStatusIcon(payment.status)} text-xs ${getStatusColor(payment.status)}`} />
