@@ -217,8 +217,12 @@ export default function ContractPayment() {
       </div>
 
       {showConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-background border border-border rounded-xl p-6 max-w-md w-full">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div 
+            className="absolute inset-0"
+            onClick={() => setShowConfirm(false)}
+          />
+          <div className="relative bg-background border-2 border-border rounded-xl p-6 w-[95vw] sm:w-[500px] lg:w-[600px] max-h-[85vh] overflow-y-auto shadow-2xl">
             <h3 className="text-xl font-bold mb-4">Confirm Payment</h3>
             <div className="space-y-3 mb-6">
               {artistName && (
