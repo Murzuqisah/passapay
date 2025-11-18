@@ -38,7 +38,7 @@ export default function ArtistTransactionsPage() {
           const txArray = Array.isArray(data) ? data : []
           
           // Fetch user names for senders
-          const formatted = await Promise.all(txArray.map(async (tx: any) => {
+          const formatted = await Promise.all(txArray.map(async (tx: Transaction) => {
             const fromAddr = tx.fromAddress || ''
             let senderName = fromAddr.slice(0, 6) + '...' + fromAddr.slice(-4)
             
