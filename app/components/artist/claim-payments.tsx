@@ -10,6 +10,7 @@ interface PendingPayment {
   amount: string
   createdAt: number
   status: number
+  senderName?: string
 }
 
 export default function ClaimPayments() {
@@ -31,7 +32,32 @@ export default function ClaimPayments() {
       const res = await fetch(`/api/payments/pending?artistAddress=${account.address}`)
       if (res.ok) {
         const data = await res.json()
-        setPendingPayments(data)
+        
+        // Fetch sender names for each payment
+        const paymentsWithNames = await Promise.all(data.map(async (payment: PendingPayment) => {
+          let senderName = payment.from.slice(0, 6) + '...' + payment.from.slice(-4)
+          
+          try {
+            const normalizedAddr = payment.from.toLowerCase()
+            const userRes = await fetch(`/api/users?walletAddress=${normalizedAddr}`)
+            
+            if (userRes.ok) {
+              const userData = await userRes.json()
+              if (userData.exists && userData.user?.name) {
+                senderName = userData.user.name
+              }
+            }
+          } catch {
+            // Use shortened address if name fetch fails
+          }
+          
+          return {
+            ...payment,
+            senderName
+          }
+        }))
+        
+        setPendingPayments(paymentsWithNames)
       }
     } catch {
       // Failed to fetch pending payments
@@ -108,7 +134,7 @@ export default function ClaimPayments() {
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      From: <span className="font-mono">{payment.from.slice(0, 6)}...{payment.from.slice(-4)}</span>
+                      From: <span className="font-semibold">{payment.senderName || 'Unknown Sender'}</span>
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {new Date(payment.createdAt * 1000).toLocaleString()}
