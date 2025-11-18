@@ -15,6 +15,7 @@ interface Transaction {
   status: 'pending' | 'completed' | 'failed'
   timestamp: string
   createdAt: string
+  senderName?: string
 }
 
 export default function ArtistTransactionsPage() {
@@ -34,7 +35,34 @@ export default function ArtistTransactionsPage() {
         const res = await fetch(`/api/transactions?address=${address}`)
         if (res.ok) {
           const data = await res.json()
-          setTransactions(Array.isArray(data) ? data : [])
+          const txArray = Array.isArray(data) ? data : []
+          
+          // Fetch user names for senders
+          const formatted = await Promise.all(txArray.map(async (tx: any) => {
+            const fromAddr = tx.fromAddress || ''
+            let senderName = fromAddr.slice(0, 6) + '...' + fromAddr.slice(-4)
+            
+            try {
+              // Normalize address to lowercase for consistent lookup
+              const normalizedAddr = fromAddr.toLowerCase()
+              const userRes = await fetch(`/api/users?walletAddress=${normalizedAddr}`)
+              
+              if (userRes.ok) {
+                const userData = await userRes.json()
+                if (userData.exists && userData.user?.name) {
+                  senderName = userData.user.name
+                }
+              }
+            } catch {
+              // Use shortened address if name fetch fails
+            }
+            
+            return {
+              ...tx,
+              senderName
+            }
+          }))
+          setTransactions(formatted)
         }
       } catch {
         // Failed to fetch transactions
@@ -151,8 +179,8 @@ export default function ArtistTransactionsPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   {/* Left: Transaction Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
                         tx.status === 'completed' ? 'bg-green-100 dark:bg-green-900/30' :
                         tx.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900/30' :
                         'bg-red-100 dark:bg-red-900/30'
@@ -164,14 +192,16 @@ export default function ArtistTransactionsPage() {
                         }`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-foreground">From: {tx.fromAddress.slice(0, 6)}...{tx.fromAddress.slice(-4)}</p>
+                        <p className="font-semibold text-foreground mb-1">
+                          From: {tx.senderName || 'Unknown Sender'}
+                        </p>
                         <p className="text-sm text-muted-foreground">
                           {new Date(tx.timestamp || tx.createdAt).toLocaleString()}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-                      <span className="icon-[mdi--link-variant]" />
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono ml-13">
+                      <span className="icon-[mdi--link-variant] flex-shrink-0" />
                       <span className="truncate">{tx.txHash}</span>
                     </div>
                   </div>
