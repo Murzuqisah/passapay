@@ -103,7 +103,34 @@ export default function ArtistDashboard() {
         if (response.ok) {
           const data = await response.json()
           const txArray = Array.isArray(data) ? data : []
-          setTransactions(txArray.slice(0, 5))
+          
+          // Fetch sender names for transactions
+          const formatted = await Promise.all(txArray.slice(0, 5).map(async (tx: Record<string, unknown>) => {
+            const fromAddr = String(tx.fromAddress || '')
+            let senderName = fromAddr.slice(0, 6) + '...' + fromAddr.slice(-4)
+            
+            try {
+              // Normalize address to lowercase for consistent lookup
+              const normalizedAddr = fromAddr.toLowerCase()
+              const userRes = await fetch(`/api/users?walletAddress=${normalizedAddr}`)
+              
+              if (userRes.ok) {
+                const userData = await userRes.json()
+                if (userData.exists && userData.user?.name) {
+                  senderName = userData.user.name
+                }
+              }
+            } catch {
+              // Use shortened address if name fetch fails
+            }
+            
+            return {
+              ...tx,
+              senderName
+            }
+          }))
+          
+          setTransactions(formatted)
           
           const pending = txArray.filter((tx: Record<string, unknown>) => tx.status === 'pending').length
           const completed = txArray.filter((tx: Record<string, unknown>) => tx.status === 'completed').length
@@ -282,6 +309,7 @@ export default function ArtistDashboard() {
                     const txId = String(tx._id || tx.txHash || Math.random())
                     const status = String(tx.status || 'pending')
                     const fromAddr = String(tx.fromAddress || '')
+                    const senderName = String(tx.senderName || fromAddr.slice(0, 6) + '...' + fromAddr.slice(-4))
                     const timestamp = String(tx.timestamp || tx.createdAt || Date.now())
                     const amount = String(tx.amount || '0')
                     
@@ -300,7 +328,7 @@ export default function ArtistDashboard() {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground">
-                            {fromAddr.slice(0, 6)}...{fromAddr.slice(-4)}
+                            From: {senderName}
                           </p>
                           <p className="text-sm text-muted-foreground">
                             {new Date(timestamp).toLocaleDateString()}
