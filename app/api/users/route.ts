@@ -81,7 +81,10 @@ export async function GET(request: NextRequest) {
     const dbConnection = await connectDB()
     
     if (USE_MONGODB && dbConnection) {
-      const user = await User.findOne({ walletAddress })
+      // Case-insensitive wallet address lookup using regex
+      const user = await User.findOne({ 
+        walletAddress: { $regex: new RegExp(`^${walletAddress}$`, 'i') }
+      })
 
       if (!user) {
         return NextResponse.json({ exists: false }, { status: 200 })

@@ -8,9 +8,14 @@ interface BalanceOverviewProps {
     dev: string
     usdValue: string
   }
+  stats?: {
+    totalPayments: number
+    totalSent: string
+    artistsPaid: number
+  }
 }
 
-export function BalanceOverview({ balance }: BalanceOverviewProps) {
+export function BalanceOverview({ balance, stats }: BalanceOverviewProps) {
   const [showBalance, setShowBalance] = useState(true)
 
   return (
@@ -74,22 +79,24 @@ export function BalanceOverview({ balance }: BalanceOverviewProps) {
         </div>
 
         {/* Quick Stats */}
-        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border/50">
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
-            <div>
-              <p className="text-xl sm:text-2xl font-bold text-primary">24</p>
-              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Total Payments</p>
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-bold text-accent">$45.2K</p>
-              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Total Sent</p>
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-bold text-foreground">12</p>
-              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Artists Paid</p>
+        {stats && (
+          <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border/50">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
+              <div>
+                <p className="text-xl sm:text-2xl font-bold text-primary">{stats.totalPayments}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Total Payments</p>
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl font-bold text-accent">{stats.totalSent}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Total Sent</p>
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl font-bold text-foreground">{stats.artistsPaid}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">Artists Paid</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

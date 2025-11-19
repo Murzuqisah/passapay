@@ -40,9 +40,9 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
 
   const getStatusBadge = (status: Payment['status']) => {
     const styles = {
-      completed: 'bg-primary/10 text-primary border-primary/20',
-      pending: 'bg-accent/10 text-accent border-accent/20',
-      failed: 'bg-destructive/10 text-destructive border-destructive/20'
+      completed: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800',
+      pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800',
+      failed: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800'
     }
     return styles[status]
   }
@@ -63,16 +63,16 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
     .reduce((sum, p) => sum + parseFloat(p.amount.replace(/,/g, '')), 0)
 
   return (
-    <div className="section-glass rounded-2xl p-6 md:p-8 border-2 border-border/50 relative overflow-hidden">
+    <div className="section-glass rounded-xl p-4 sm:p-6 border-2 border-border/50 relative overflow-hidden">
       {/* Decorative gradient */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl opacity-50" />
+      <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl opacity-50 hidden sm:block" />
       
       {/* Header */}
-      <div className="mb-6 relative z-10">
-        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
+      <div className="mb-4 sm:mb-6 relative z-10">
+        <h2 className="text-lg sm:text-xl font-bold text-foreground mb-2">
           Payment History
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           Complete record of all your transactions
         </p>
       </div>
@@ -144,8 +144,8 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
                 <p className="font-bold text-foreground text-sm sm:text-base mb-0.5">
                   {payment.recipient}
                 </p>
-                <p className="text-xs text-muted-foreground font-mono truncate">
-                  {payment.walletAddress}
+                <p className="text-xs text-muted-foreground font-mono">
+                  {payment.walletAddress.slice(0, 6)}...{payment.walletAddress.slice(-4)}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
                   {formatDate(payment.timestamp)}

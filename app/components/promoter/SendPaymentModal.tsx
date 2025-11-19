@@ -38,15 +38,15 @@ export function SendPaymentModal({ isOpen, onClose }: SendPaymentModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-md"
+        className="absolute inset-0"
         onClick={handleClose}
       />
 
       {/* Modal Content */}
-      <div className="relative bg-background rounded-xl sm:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-border shadow-2xl">
+      <div className="relative bg-background rounded-xl sm:rounded-2xl w-[95vw] sm:w-[500px] lg:w-[600px] max-h-[90vh] overflow-y-auto border-2 border-border shadow-2xl">
         {/* Form Step */}
         {step === 'form' && (
           <div className="p-4 sm:p-6 md:p-8">

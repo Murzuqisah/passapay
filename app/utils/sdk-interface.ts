@@ -51,6 +51,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
 export function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   address = '',
   signer: PolkadotSigner,
   callbacks: {
@@ -77,7 +78,6 @@ export function createRemarkTransaction(
     },
     error: (err) => {
       unsub.unsubscribe()
-      console.error(err, address)
       callbacks.onError(err.message || 'Unknown error')
     },
   })
@@ -118,7 +118,6 @@ export function createUSDCTransfer(
     },
     error: (err) => {
       unsub.unsubscribe()
-      console.error(err)
       callbacks.onError(err.message || 'Unknown error')
     },
   })

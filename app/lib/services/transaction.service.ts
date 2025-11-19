@@ -13,13 +13,21 @@ export async function getTransactionsByAddress(address: string) {
       return [] // Return empty if no DB connection
     }
     
-    return await TransactionModel.find({
-      $or: [{ fromAddress: address }, { toAddress: address }]
+    // Normalize address to lowercase for case-insensitive matching
+    const normalizedAddress = address.toLowerCase()
+    
+    const transactions = await TransactionModel.find({
+      $or: [
+        { fromAddress: { $regex: new RegExp(`^${normalizedAddress}$`, 'i') } },
+        { toAddress: { $regex: new RegExp(`^${normalizedAddress}$`, 'i') } }
+      ]
     })
     .sort({ timestamp: -1 })
     .limit(50)
     .maxTimeMS(3000) // 3 second query timeout
     .lean()
+    
+    return transactions
   } catch (error) {
     console.error('Error fetching transactions:', error)
     return []

@@ -94,8 +94,8 @@ export function useMetaMask() {
 
       setAccount(acc)
       localStorage.setItem('metamask:account', JSON.stringify(acc))
-    } catch (error) {
-      console.error('MetaMask connection error:', error)
+    } catch {
+      // MetaMask connection error
     } finally {
       setIsConnecting(false)
     }

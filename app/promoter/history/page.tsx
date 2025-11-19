@@ -33,20 +33,39 @@ export default function HistoryPage() {
         const res = await fetch(`/api/transactions?address=${address}`)
         if (res.ok) {
           const data = await res.json()
-          const formatted = (Array.isArray(data) ? data : []).map((tx: Record<string, unknown>) => ({
-            id: String(tx._id || tx.txHash || ''),
-            recipient: String(tx.toAddress || ''),
-            walletAddress: String(tx.toAddress || ''),
-            amount: String(tx.amount || '0'),
-            currency: 'DEV',
-            timestamp: new Date(String(tx.timestamp || tx.createdAt || Date.now())),
-            status: (tx.status as 'completed' | 'pending' | 'failed') || 'pending',
-            txHash: String(tx.txHash || '')
+          const txArray = Array.isArray(data) ? data : []
+          
+          // Fetch user names for recipients
+          const formatted = await Promise.all(txArray.map(async (tx: Record<string, unknown>) => {
+            let recipientName = String(tx.toAddress || '').slice(0, 6) + '...' + String(tx.toAddress || '').slice(-4)
+            
+            try {
+              const userRes = await fetch(`/api/users?walletAddress=${tx.toAddress}`)
+              if (userRes.ok) {
+                const userData = await userRes.json()
+                if (userData.exists && userData.user?.name) {
+                  recipientName = userData.user.name
+                }
+              }
+            } catch {
+              // Use shortened address if name fetch fails
+            }
+            
+            return {
+              id: String(tx._id || tx.txHash || ''),
+              recipient: recipientName,
+              walletAddress: String(tx.toAddress || ''),
+              amount: String(tx.amount || '0'),
+              currency: 'DEV',
+              timestamp: new Date(String(tx.timestamp || tx.createdAt || Date.now())),
+              status: (tx.status as 'completed' | 'pending' | 'failed') || 'pending',
+              txHash: String(tx.txHash || '')
+            }
           }))
           setPayments(formatted)
         }
-      } catch (error) {
-        console.error('Failed to fetch payments:', error)
+      } catch {
+        // Failed to fetch payments
       } finally {
         setLoading(false)
       }
@@ -57,7 +76,7 @@ export default function HistoryPage() {
 
   return (
     <DashboardSidebar userType="promoter">
-      <div className="max-w-6xl">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold gradient-text mb-2">Payment History</h1>
           <p className="text-muted-foreground">Complete record of all payments sent</p>

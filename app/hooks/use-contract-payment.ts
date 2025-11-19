@@ -53,14 +53,13 @@ export function useContractPayment() {
           // PaymentId is topics[1]
           paymentIdValue = log.topics[1]
           setPaymentId(paymentIdValue)
-          console.log('PaymentId extracted:', paymentIdValue)
           break
         }
       }
       // Save to database
       if (paymentIdValue) {
         try {
-          const response = await fetch('/api/transactions', {
+          await fetch('/api/transactions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -76,16 +75,9 @@ export function useContractPayment() {
               blockNumber: receipt.blockNumber
             })
           })
-          if (response.ok) {
-            console.log('Transaction saved to database')
-          } else {
-            console.error('Failed to save transaction:', await response.text())
-          }
-        } catch (dbError) {
-          console.error('Failed to save to database:', dbError)
+        } catch {
+          // Silently fail - transaction is still on blockchain
         }
-      } else {
-        console.warn('No paymentId found in transaction logs')
       }
       
       setResult('Payment created successfully!')
@@ -130,8 +122,8 @@ export function useContractPayment() {
             status: 'completed'
           })
         })
-      } catch (dbError) {
-        console.error('Failed to update database:', dbError)
+      } catch {
+        // Failed to update database
       }
       
       setResult('Payment completed!')
@@ -196,7 +188,6 @@ export function useContractPayment() {
       }
 
     } catch (error: unknown) {
-      console.error('Error fetching payment:', error)
       throw error
     }
   }
@@ -262,7 +253,6 @@ export function useContractPayment() {
       throw new Error('Failed to calculate net amount after retries')
 
     } catch (error: unknown) {
-      console.error('Error calculating net amount:', error)
       throw error
     }
   }

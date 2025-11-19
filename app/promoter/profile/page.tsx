@@ -25,8 +25,8 @@ export default function ProfilePage() {
           const data = await res.json()
           setProfile({ name: data.name || '', genre: data.genre || '', country: data.country || '' })
         }
-      } catch (error) {
-        console.error('Failed to fetch profile:', error)
+      } catch {
+        // Failed to fetch profile
       } finally {
         setLoading(false)
       }
@@ -52,8 +52,7 @@ export default function ProfilePage() {
       } else {
         alert('Failed to update profile')
       }
-    } catch (error) {
-      console.error('Failed to save profile:', error)
+    } catch {
       alert('Failed to update profile')
     } finally {
       setSaving(false)
@@ -62,7 +61,7 @@ export default function ProfilePage() {
 
   return (
     <DashboardSidebar userType="promoter">
-      <div className="max-w-3xl">
+      <div className="max-w-3xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold gradient-text mb-2">Profile Settings</h1>
           <p className="text-muted-foreground">Manage your promoter profile information</p>

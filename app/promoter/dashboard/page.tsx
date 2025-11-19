@@ -36,6 +36,7 @@ export default function PromoterDashboard() {
   const [balance, setBalance] = useState({ usdc: '0.00', dev: '0.00', usdValue: '0.00' })
   const [recentPayments, setRecentPayments] = useState<Payment[]>([])
   const [paymentHistory, setPaymentHistory] = useState<Payment[]>([])
+  const [stats, setStats] = useState({ totalPayments: 0, totalSent: '0', artistsPaid: 0 })
 
   useEffect(() => {
     // Check if user exists in database
@@ -62,8 +63,7 @@ export default function PromoterDashboard() {
           showError('This dashboard is only for promoters')
           setTimeout(() => router.push('/'), 2000)
         }
-      } catch (error) {
-        console.error('Error checking user access:', error)
+      } catch {
         showError('Unable to verify your access')
         setTimeout(() => router.push('/'), 2000)
       }
@@ -76,17 +76,14 @@ export default function PromoterDashboard() {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      console.log(metamask.account)
       if (!metamask.account ) return
       
       try {
         if (window.ethereum) {
           const provider = new BrowserProvider(window.ethereum)
           const address = metamask.account?.address
-          console.log(address)
           if (address) {
             const bal = await provider.getBalance(address)
-            console.log(bal)
             const devBalance = parseFloat(formatEther(bal)).toFixed(2)
             setBalance({
               usdc: '0.00',
@@ -95,8 +92,8 @@ export default function PromoterDashboard() {
             })
           }
         }
-      } catch (error) {
-        console.error('Failed to fetch balance:', error)
+      } catch {
+        // Failed to fetch balance
       }
     }
 
@@ -129,11 +126,26 @@ export default function PromoterDashboard() {
           }))
           setRecentPayments(formatted.slice(0, 3))
           setPaymentHistory(formatted)
+          
+          // Calculate stats
+          const completedPayments = formatted.filter((tx: Payment) => tx.status === 'completed')
+          const totalAmount = completedPayments.reduce((sum: number, tx: Payment) => {
+            return sum + parseFloat(tx.amount || '0')
+          }, 0)
+          const uniqueArtists = new Set(completedPayments.map((tx: Payment) => tx.walletAddress))
+          
+          setStats({
+            totalPayments: completedPayments.length,
+            totalSent: totalAmount >= 1000 
+              ? `$${(totalAmount / 1000).toFixed(1)}K` 
+              : `$${totalAmount.toFixed(2)}`,
+            artistsPaid: uniqueArtists.size
+          })
         }
-      } catch (error) {
-        console.error('Failed to fetch transactions:', error)
+      } catch {
         setRecentPayments([])
         setPaymentHistory([])
+        setStats({ totalPayments: 0, totalSent: '$0', artistsPaid: 0 })
       }
     }
 
@@ -150,89 +162,75 @@ export default function PromoterDashboard() {
 
   return (
     <DashboardSidebar userType="promoter">
-      <div className="min-h-screen bg-background">
-
-      {/* Hero Section with Glass Effect */}
-      <section className="relative pt-20 sm:pt-24 pb-8 sm:pb-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
-
-        {/* Decorative gradient orbs */}
-        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl opacity-30 animate-float hidden sm:block" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-30 animate-float hidden sm:block" style={{ animationDelay: '1s' }} />
-
-        <div className="container mx-auto px-3 sm:px-4 relative z-10">
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-6 sm:mb-8">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 gradient-text">
-                Promoter Dashboard
-              </h1>
-              <p className="text-muted-foreground text-base sm:text-lg">
-                Manage payments and track your transactions
-              </p>
-            </div>
-
-            {/* Navigation Tabs */}
-            <div className="flex gap-2 mb-6 sm:mb-8 w-full">
-              <button
-                onClick={() => setActiveView('overview')}
-                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base whitespace-nowrap ${activeView === 'overview'
-                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
-                  : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
-                  }`}
-              >
-                <span className="icon-[mdi--view-dashboard] inline-block mr-1 sm:mr-2 text-lg sm:text-xl" />
-                Overview
-              </button>
-              <button
-                onClick={() => setActiveView('history')}
-                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base whitespace-nowrap ${activeView === 'history'
-                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105'
-                  : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
-                  }`}
-              >
-                <span className="icon-[mdi--history] inline-block mr-1 sm:mr-2 text-lg sm:text-xl" />
-                History
-              </button>
-            </div>
-
-            {/* Overview View */}
-            {activeView === 'overview' && (
-              <div className="space-y-4 sm:space-y-6 md:space-y-8 animate-in">
-                {/* Balance and Quick Actions */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-                  <div className="lg:col-span-2">
-                    <BalanceOverview balance={balance} />
-                  </div>
-                  <div>
-                    <ContractPayment />
-                  </div>
-                </div>
-
-                {/* Recent Payments */}
-                <RecentPayments
-                  payments={recentPayments}
-                  onViewAll={() => setActiveView('history')}
-                />
-              </div>
-            )}
-
-            {/* History View */}
-            {activeView === 'history' && (
-              <div className="animate-in">
-                <PaymentHistory payments={paymentHistory} />
-              </div>
-            )}
-          </div>
+      <div className="w-full space-y-6">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 gradient-text">
+            Promoter Dashboard
+          </h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
+            Manage payments and track your transactions
+          </p>
         </div>
-      </section>
 
-        {/* Send Payment Modal */}
-        <SendPaymentModal
-          isOpen={showSendModal}
-          onClose={() => setShowSendModal(false)}
-        />
+        {/* Navigation Tabs */}
+        <div className="flex gap-2 mb-6 sm:mb-8 w-full overflow-x-auto">
+          <button
+            onClick={() => setActiveView('overview')}
+            className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base whitespace-nowrap ${activeView === 'overview'
+              ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+              : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
+              }`}
+          >
+            <span className="icon-[mdi--view-dashboard] inline-block mr-1 sm:mr-2 text-base sm:text-lg" />
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveView('history')}
+            className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold transition-all duration-300 text-sm sm:text-base whitespace-nowrap ${activeView === 'history'
+              ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+              : 'bg-card text-foreground hover:bg-muted border-2 border-border hover:border-primary/50'
+              }`}
+          >
+            <span className="icon-[mdi--history] inline-block mr-1 sm:mr-2 text-base sm:text-lg" />
+            History
+          </button>
+        </div>
+
+        {/* Overview View */}
+        {activeView === 'overview' && (
+          <div className="space-y-4 sm:space-y-6 animate-in">
+            {/* Balance and Quick Actions */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2">
+                <BalanceOverview balance={balance} stats={stats} />
+              </div>
+              <div className="lg:col-span-1">
+                <ContractPayment />
+              </div>
+            </div>
+
+            {/* Recent Payments */}
+            <RecentPayments
+              payments={recentPayments}
+              onViewAll={() => setActiveView('history')}
+            />
+          </div>
+        )}
+
+        {/* History View */}
+        {activeView === 'history' && (
+          <div className="animate-in">
+            <PaymentHistory payments={paymentHistory} />
+          </div>
+        )}
       </div>
+
+      {/* Send Payment Modal */}
+      <SendPaymentModal
+        isOpen={showSendModal}
+        onClose={() => setShowSendModal(false)}
+      />
     </DashboardSidebar>
   )
 }
